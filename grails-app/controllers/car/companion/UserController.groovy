@@ -6,6 +6,15 @@ class UserController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+    def geoLocatingService
+
+    def beforeInterceptor = [action: this.&setGeoLocation, only: ['save', 'update']]
+
+    def setGeoLocation() {
+        def coords = geoLocatingService.locate(params['address']);
+        params.putAll(coords);
+    }
+
     def index() {
         redirect(action: "list", params: params)
     }
@@ -13,6 +22,16 @@ class UserController {
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         [userInstanceList: User.list(params), userInstanceTotal: User.count()]
+    }
+
+    def login() {
+        def email = params['email']
+        def passwd = params['passwd']
+        def user = User.findAllByEmail(email);
+        if (user != null && user.passwd.equals(passwd)) {
+            session.setAttribute("user", user);
+        }
+        redirect(action: "list");
     }
 
     def create() {
