@@ -33,14 +33,14 @@
                 setTimeout(function() {
                     markers[${i}] =
                         new google.maps.Marker({
-                            title: "${user.name} ${user.surname}",
+                            title: "${user.name}",
                             map: map,
                             draggable: false,
                             animation: google.maps.Animation.DROP,
                             position: new google.maps.LatLng(${user.lat}, ${user.lng})
                         });
 
-                    content[${i}] = '<div>' + '${user.contactInfo}' + '</div>';
+                    content[${i}] = '<div>' + 'INFO' + '</div>';
 
                     infoWindows[${i}] = new google.maps.InfoWindow({
                         content: content[${i}]
@@ -57,6 +57,13 @@
         </script>
 	</head>
 	<body>
-        <div id="map_canvas"></div>
-	</body>
+        <div id="pageWrapper">
+            <div id="menu"></div>
+            <div id="map">
+                <div id="map_canvas"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+    </body>
 </html>

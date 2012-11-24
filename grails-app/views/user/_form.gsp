@@ -10,20 +10,12 @@
 	<g:field type="email" name="email" required="" value="${userInstance?.email}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'city', 'error')} ">
-	<label for="city">
-		<g:message code="user.city.label" default="City" />
+<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'address', 'error')} ">
+	<label for="address">
+		<g:message code="user.address.label" default="Address" />
 		
 	</label>
-	<g:textField name="city" value="${userInstance?.city}"/>
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'contactInfo', 'error')} ">
-	<label for="contactInfo">
-		<g:message code="user.contactInfo.label" default="Contact Info" />
-		
-	</label>
-	<g:textField name="contactInfo" value="${userInstance?.contactInfo}"/>
+	<g:textField name="address" value="${userInstance?.address}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'hasCar', 'error')} ">
@@ -32,14 +24,6 @@
 		
 	</label>
 	<g:checkBox name="hasCar" value="${userInstance?.hasCar}" />
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'homeAddress', 'error')} ">
-	<label for="homeAddress">
-		<g:message code="user.homeAddress.label" default="Home Address" />
-		
-	</label>
-	<g:textField name="homeAddress" value="${userInstance?.homeAddress}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'lat', 'error')} required">
@@ -66,27 +50,11 @@
 	<g:textField name="name" value="${userInstance?.name}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'office', 'error')} required">
-	<label for="office">
-		<g:message code="user.office.label" default="Office" />
-		<span class="required-indicator">*</span>
-	</label>
-	<g:select id="office" name="office.id" from="${car.companion.Office.list()}" optionKey="id" required="" value="${userInstance?.office?.id}" class="many-to-one"/>
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'surname', 'error')} ">
-	<label for="surname">
-		<g:message code="user.surname.label" default="Surname" />
+<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'passwd', 'error')} ">
+	<label for="passwd">
+		<g:message code="user.passwd.label" default="Passwd" />
 		
 	</label>
-	<g:textField name="surname" value="${userInstance?.surname}"/>
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'time', 'error')} ">
-	<label for="time">
-		<g:message code="user.time.label" default="Time" />
-		
-	</label>
-	<g:textField name="time" value="${userInstance?.time}"/>
+	<g:textField name="passwd" value="${userInstance?.passwd}"/>
 </div>
 

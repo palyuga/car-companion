@@ -7,13 +7,12 @@ class UserController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index() {
-        redirect(action: "showMap", params: params)
+        redirect(action: "list", params: params)
     }
 
-    def showMap(Integer max) {
+    def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        [userInstanceList: User.list(params), userInstanceTotal: User.count()]
-        render(view: "show_map")
+        [userInstanceList: User.list(params), userInstanceTotal: User.count(), currentUser: [lat: 54.9742721, lng: 73.3822115]]
     }
 
     def create() {
