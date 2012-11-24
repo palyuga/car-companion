@@ -1,6 +1,6 @@
 
 <%@ page import="car.companion.User" %>
-<!doctype html>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta name="layout" content="main">
@@ -32,20 +32,11 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${userInstance?.city}">
+				<g:if test="${userInstance?.address}">
 				<li class="fieldcontain">
-					<span id="city-label" class="property-label"><g:message code="user.city.label" default="City" /></span>
+					<span id="address-label" class="property-label"><g:message code="user.address.label" default="Address" /></span>
 					
-						<span class="property-value" aria-labelledby="city-label"><g:fieldValue bean="${userInstance}" field="city"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${userInstance?.contactInfo}">
-				<li class="fieldcontain">
-					<span id="contactInfo-label" class="property-label"><g:message code="user.contactInfo.label" default="Contact Info" /></span>
-					
-						<span class="property-value" aria-labelledby="contactInfo-label"><g:fieldValue bean="${userInstance}" field="contactInfo"/></span>
+						<span class="property-value" aria-labelledby="address-label"><g:fieldValue bean="${userInstance}" field="address"/></span>
 					
 				</li>
 				</g:if>
@@ -55,15 +46,6 @@
 					<span id="hasCar-label" class="property-label"><g:message code="user.hasCar.label" default="Has Car" /></span>
 					
 						<span class="property-value" aria-labelledby="hasCar-label"><g:formatBoolean boolean="${userInstance?.hasCar}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${userInstance?.homeAddress}">
-				<li class="fieldcontain">
-					<span id="homeAddress-label" class="property-label"><g:message code="user.homeAddress.label" default="Home Address" /></span>
-					
-						<span class="property-value" aria-labelledby="homeAddress-label"><g:fieldValue bean="${userInstance}" field="homeAddress"/></span>
 					
 				</li>
 				</g:if>
@@ -104,20 +86,11 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${userInstance?.surname}">
+				<g:if test="${userInstance?.passwd}">
 				<li class="fieldcontain">
-					<span id="surname-label" class="property-label"><g:message code="user.surname.label" default="Surname" /></span>
+					<span id="passwd-label" class="property-label"><g:message code="user.passwd.label" default="Passwd" /></span>
 					
-						<span class="property-value" aria-labelledby="surname-label"><g:fieldValue bean="${userInstance}" field="surname"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${userInstance?.time}">
-				<li class="fieldcontain">
-					<span id="time-label" class="property-label"><g:message code="user.time.label" default="Time" /></span>
-					
-						<span class="property-value" aria-labelledby="time-label"><g:fieldValue bean="${userInstance}" field="time"/></span>
+						<span class="property-value" aria-labelledby="passwd-label"><g:fieldValue bean="${userInstance}" field="passwd"/></span>
 					
 				</li>
 				</g:if>

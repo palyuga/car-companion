@@ -6,7 +6,12 @@ class Office {
     Double lat
     Double lng
 
-    static constraints = {
+    String toString() {
+        name
     }
 
+    static hasMany = [users : User];
+    static constraints = {
+        name(blank: false, unique: true)
+    }
 }
