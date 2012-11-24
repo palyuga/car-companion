@@ -34,6 +34,11 @@ class UserController {
         redirect(action: "list");
     }
 
+    def logoff() {
+        session.invalidate();
+        redirect(uri: "/");
+    }
+
     def create() {
         [userInstance: new User(params)]
     }
@@ -50,6 +55,8 @@ class UserController {
     }
 
     def show(Long id) {
+        logoff();
+        return;
         def userInstance = User.get(id)
         if (!userInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), id])
