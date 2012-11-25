@@ -21,14 +21,30 @@ class UserController {
 
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        [userInstanceList: User.list(params), userInstanceTotal: User.count()]
+        User user = null
+        user = (User)session.getAttribute("user")
+        def resultList = []
+        if (user != null) {
+            user.refresh()
+            resultList = User.findAllByOffice(user.office)
+        }
+        Iterator<User> it = resultList.iterator();
+        while (it.hasNext()) {
+            User u = it.next();
+            if (u.email.equals(user.email)) {
+                it.remove();
+                break;
+            }
+        }
+
+        [userInstanceList: resultList, userInstanceTotal: User.count(), isLogged: (user != null), currentUser: [lat: user?.lat, lng: user?.lng]]
     }
 
     def login() {
         def email = params['email']
         def passwd = params['passwd']
-        def user = User.findAllByEmail(email);
-        if (user != null && user.passwd.equals(passwd)) {
+        def user = User.findByEmail(email.toString());
+        if (user != null && user.passwd.toString().equals(passwd.toString())) {
             session.setAttribute("user", user);
         }
         redirect(action: "list");
@@ -36,7 +52,7 @@ class UserController {
 
     def logoff() {
         session.invalidate();
-        redirect(uri: "/");
+        redirect(action: "list");
     }
 
     def create() {
@@ -51,12 +67,10 @@ class UserController {
         }
 
         flash.message = message(code: 'default.created.message', args: [message(code: 'user.label', default: 'User'), userInstance.id])
-        redirect(action: "show", id: userInstance.id)
+        redirect(action: "list")
     }
 
     def show(Long id) {
-        logoff();
-        return;
         def userInstance = User.get(id)
         if (!userInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), id])

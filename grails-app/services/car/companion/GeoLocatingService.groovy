@@ -3,6 +3,7 @@ package car.companion
 class GeoLocatingService {
 
     def locate(String address) {
+        address = "Омск, " + address
         def base = "http://maps.googleapis.com/maps/api/geocode/xml?"
         def params = []
         params << "address=" + URLEncoder.encode(address)

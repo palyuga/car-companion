@@ -9,9 +9,9 @@ class User {
     String address
     Double lat
     Double lng
-    Office office
 
     static belongsTo = [office: Office]
+
     static constraints = {
         email(blank: false, unique: true, email: true)
     }

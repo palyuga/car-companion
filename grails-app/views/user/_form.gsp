@@ -58,11 +58,3 @@
 	<g:select id="office" name="office.id" from="${car.companion.Office.list()}" optionKey="id" required="" value="${userInstance?.office?.id}" class="many-to-one"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'passwd', 'error')} ">
-	<label for="passwd">
-		<g:message code="user.passwd.label" default="Passwd" />
-		
-	</label>
-	<g:textField name="passwd" value="${userInstance?.passwd}"/>
-</div>
-

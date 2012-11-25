@@ -76,7 +76,7 @@
 					
 				</li>
 				</g:if>
-			
+
 				<g:if test="${userInstance?.office}">
 				<li class="fieldcontain">
 					<span id="office-label" class="property-label"><g:message code="user.office.label" default="Office" /></span>
@@ -86,6 +86,7 @@
 				</li>
 				</g:if>
 			
+
 				<g:if test="${userInstance?.passwd}">
 				<li class="fieldcontain">
 					<span id="passwd-label" class="property-label"><g:message code="user.passwd.label" default="Passwd" /></span>
