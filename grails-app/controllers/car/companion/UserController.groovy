@@ -20,9 +20,8 @@ class UserController {
     }
 
     def list(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        User user = null
-        user = (User)session.getAttribute("user")
+
+        User user = (User)session.getAttribute("user")
         def resultList = []
         if (user != null) {
             user.refresh()
@@ -37,7 +36,9 @@ class UserController {
             }
         }
 
-        [userInstanceList: resultList, userInstanceTotal: User.count(), isLogged: (user != null), currentUser: [lat: user?.lat, lng: user?.lng]]
+        [userInstanceList: resultList,
+         isLogged: (user != null),
+         currentUser: [lat: user?.lat, lng: user?.lng]]
     }
 
     def login() {
