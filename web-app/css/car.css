@@ -1,0 +1,70 @@
+
+#pageWrapper {
+    width: 100%;
+    height: 100%;
+}
+
+#menu {
+    width: 20%;
+    height: 100%;
+    float: left;
+    background-image: url(../images/car/menu-bg.png);
+    background-repeat: repeat;
+}
+
+#map {
+    position: absolute;
+    left: 20%;
+    width: 80%;
+    height: 100%;
+    float: left;
+}
+
+#map_canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.clear {
+    clear: both;
+}
+
+.fieldcontain input {
+    width: 240px;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+.fieldcontain label {
+    margin-left: 20px;
+}
+fieldset {
+    margin: 0;
+    padding: 0;
+}
+
+.logo {
+    margin-top: 20px;
+    margin-left: 40px;
+}
+
+#login {
+    background-image: url(../images/car/enter-button.png);
+    width: 283px;
+    height: 51px;
+    cursor: pointer;
+    margin-top: 31px;
+    margin-left: 8px;
+}
+
+#register {
+    background-image: url(../images/car/reg-button.png);
+    width: 298px;
+    height: 51px;
+    cursor: pointer;
+    margin-top: 31px;
+    margin-left: -1px;
+}
+
+#slider {
+    margin-top: 10px;
+}
