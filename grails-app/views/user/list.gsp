@@ -101,10 +101,10 @@
                             for (var i = 0; i < markers.length; i++) {
                                 var userLatLng = markers[i].position;
                                 var distance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, mylatlng);
-                                if (distance/1000 > ui.value || 1 > 0) {
-                                    markers[i].visible = false;
+                                if (distance/1000 > ui.value) {
+                                    markers[i].setMap(null);
                                 } else {
-                                    markers[i].visible = true;
+                                    markers[i].setMap(map);
                                 }
                             }
                         }
@@ -113,6 +113,55 @@
                 });
             </g:if>
         }
+
+        $(document).ready(function() {
+
+            $('#password-clear').show();
+            $('#password').hide();
+
+            $('#password-clear').focus(function() {
+                $('#password-clear').hide();
+                $('#password').show();
+                $('#password').focus();
+            });
+            $('#password').blur(function() {
+                if($('#password').val() == '') {
+                    $('#password-clear').show();
+                    $('#password').hide();
+                }
+            });
+
+            $('#password-clear2').show();
+            $('#password2').hide();
+
+            $('#password-clear2').focus(function() {
+                $('#password-clear2').hide();
+                $('#password2').show();
+                $('#password2').focus();
+            });
+            $('#password2').blur(function() {
+                if($('#password2').val() == '') {
+                    $('#password-clear2').show();
+                    $('#password2').hide();
+                }
+            });
+
+            $('.default-value').each(function() {
+                var default_value = this.value;
+                $(this).focus(function() {
+                    if(this.value == default_value) {
+                        this.value = '';
+                    }
+                });
+                $(this).blur(function() {
+                    if(this.value == '') {
+                        this.value = default_value;
+                    }
+                });
+            });
+
+        });
+
     </script>
 </head>
 <body>
@@ -125,16 +174,11 @@
 
                 <fieldset class="form">
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'email', 'error')} ">
-                        <label for="email">
-                            <g:message code="user.passwd.label" default="Email" />
-                        </label><br/>
-                        <g:textField name="email" />
+                        <g:textField name="email" class="default-value" value="Адрес эл. почты"/>
                     </div>
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'passwd', 'error')} ">
-                        <label for="passwd">
-                            <g:message code="user.passwd.label" default="Password" />
-                        </label><br/>
-                        <g:passwordField name="passwd"/>
+                        <g:passwordField id="password" name="passwd"/>
+                        <input id="password-clear" value="Пароль"/>
                     </div>
                 </fieldset>
                 <fieldset class="buttons">
@@ -142,58 +186,44 @@
                 </fieldset>
             </g:form>
             <g:form action="save" >
+                <img src="../images/car/firsttime.png" id="firsttime"/>
                 <fieldset class="form">
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'email', 'error')}">
-                        <label for="email">
-                            <g:message code="user.email.label" default="Email" />
-                            <span class="required-indicator">*</span>
-                        </label>
-                        <g:field type="email" name="email" required="" value="${userInstance?.email}"/>
+                        <g:field type="email" class="default-value" name="email" required="" value="Адрес эл. почты"/>
                     </div>
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'passwd', 'error')} ">
-                        <label for="passwd">
-                            <g:message code="user.passwd.label" default="Password" />
-                        </label><br/>
-                        <g:passwordField name="passwd"/>
+                        <g:passwordField name="passwd" id="password2"/>
+                        <input id="password-clear2" value="Пароль"/>
+                    </div>
+
+                    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'name', 'error')} ">
+                        <g:textField name="name" class="default-value" value="Имя"/>
                     </div>
 
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'address', 'error')} ">
-                        <label for="address">
-                            <g:message code="user.address.label" default="Address" />
-
-                        </label>
-                        <g:textField name="address" value="${userInstance?.address}"/>
+                        <g:textField name="address" class="default-value" value="Домашний адрес"/>
                     </div>
 
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'hasCar', 'error')} ">
                         <label for="hasCar">
-                            <g:message code="user.hasCar.label" default="Has Car" />
+                            <g:message code="user.hasCar.label" default="У меня есть машина" />
                         </label>
                         <g:checkBox style="width: 40px"name="hasCar" value="${userInstance?.hasCar}" />
                     </div>
 
                     <div style="display: none" class="fieldcontain ${hasErrors(bean: userInstance, field: 'lat', 'error')} required">
-
                         <g:field type="hidden" name="lat" value="-1" required=""/>
                     </div>
 
                     <div style="display: none" class="fieldcontain ${hasErrors(bean: userInstance, field: 'lng', 'error')} required">
-
                         <g:field  type="hidden" name="lng" value="-1" required=""/>
                     </div>
 
-                    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'name', 'error')} ">
-                        <label for="name">
-                            <g:message code="user.name.label" default="Name" />
 
-                        </label>
-                        <g:textField name="name" value="${userInstance?.name}"/>
-                    </div>
 
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'office', 'error')} required">
                         <label for="office">
-                            <g:message code="user.office.label" default="Office" />
-                            <span class="required-indicator">*</span>
+                            <g:message code="user.office.label" default="Расположение офиса" />
                         </label>
                         <g:select id="office" name="office.id" from="${car.companion.Office.list()}" optionKey="id" required="" value="${userInstance?.office?.id}" class="many-to-one"/>
                     </div>
