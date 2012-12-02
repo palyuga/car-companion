@@ -89,24 +89,27 @@
                 });
 
                 $(function() {
-                    $( "#slider" ).slider({
+                    $("#slider").slider({
                         value: 1,
-                        min: 0,
+                        min: 1,
                         max: 15,
                         step: 1,
                         slide: function( event, ui ) {
                             $( "#amount" ).val( ui.value + " km");
                             var mylatlng = new google.maps.LatLng(${currentUser.lat}, ${currentUser.lng});
-
+                            var bounds = new google.maps.LatLngBounds();
+                            bounds.extend(mylatlng);
                             for (var i = 0; i < markers.length; i++) {
                                 var userLatLng = markers[i].position;
                                 var distance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, mylatlng);
                                 if (distance/1000 > ui.value) {
                                     markers[i].setMap(null);
                                 } else {
+                                    bounds.extend(userLatLng);
                                     markers[i].setMap(map);
                                 }
                             }
+                            map.fitBounds(bounds);
                         }
                     });
                     $( "#amount" ).val($( "#slider" ).slider( "value" ) + " km");
