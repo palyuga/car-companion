@@ -42,20 +42,28 @@
                         new google.maps.Point(0,24)
                 );
 
-                var userImage = new google.maps.MarkerImage(
-                        '../images/user.png',
-                        new google.maps.Size(24,24),
+                var pedestrianImage = new google.maps.MarkerImage(
+                        '../images/car/user.png',
+                        new google.maps.Size(32,32),
                         new google.maps.Point(0,0),
-                        new google.maps.Point(0,24)
+                        new google.maps.Point(0,32)
+                );
+
+                var carImage = new google.maps.MarkerImage(
+                        '../images/car/car.png',
+                        new google.maps.Size(32,32),
+                        new google.maps.Point(0,0),
+                        new google.maps.Point(0,32)
                 );
 
 
-
+            var delayBetweenDropping = 50;
             <g:each in="${userInstanceList}" status="i" var="user">
+
                 setTimeout(function() {
                     markers[${i}] =
                             new google.maps.Marker({
-                                icon: userImage,
+                                icon: (${user.hasCar}) ? carImage : pedestrianImage,
                                 title: "${user.name}",
                                 map: map,
                                 draggable: false,
@@ -75,7 +83,8 @@
                     google.maps.event.addListener(markers[${i}], 'click', function(){
                         infoWindows[${i}].open(map, markers[${i}])
                     });
-                }, '${i}' * 50);
+                },
+                '${i}' * delayBetweenDropping);
 
 
             </g:each>
@@ -103,10 +112,14 @@
                                 var userLatLng = markers[i].position;
                                 var distance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, mylatlng);
                                 if (distance/1000 > ui.value) {
-                                    markers[i].setMap(null);
+                                    if (markers[i].map != null) {
+                                        markers[i].setMap(null);
+                                    }
                                 } else {
                                     bounds.extend(userLatLng);
-                                    markers[i].setMap(map);
+                                    if (markers[i].map == null) {
+                                        markers[i].setMap(map);
+                                    }
                                 }
                             }
                             map.fitBounds(bounds);

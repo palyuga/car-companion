@@ -73,6 +73,7 @@
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="grails-2.1.1" level="application" />
     <orderEntry type="module" module-name="Car-companion-grailsPlugins" />
   </component>
 </module>
