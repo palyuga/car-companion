@@ -2,6 +2,8 @@ package car.companion
 
 class GeoLocatingService {
 
+    def SUCCESSFUL_RESULT_CODE = 200
+
     def locate(String address) {
         address = "Омск, " + address
         def base = "http://maps.googleapis.com/maps/api/geocode/xml?"
@@ -12,7 +14,7 @@ class GeoLocatingService {
         def connection = url.openConnection()
 
         def result = [:]
-        if(connection.responseCode == 200){
+        if(isResponseSuccessful(connection)){
             def xml = connection.content.text
             def geonames = new XmlSlurper().parseText(xml)
             result.lat = Double.valueOf(geonames.result.geometry.location.lat as String)
@@ -23,5 +25,9 @@ class GeoLocatingService {
             )
         }
         return result;
+    }
+
+    private boolean isResponseSuccessful(final URLConnection connection) {
+        connection.responseCode == SUCCESSFUL_RESULT_CODE
     }
 }

@@ -8,11 +8,14 @@ class UserController {
 
     def geoLocatingService
 
+    def encryptionService
+
     def beforeInterceptor = [action: this.&setGeoLocation, only: ['save', 'update']]
 
     def setGeoLocation() {
-        def coords = geoLocatingService.locate(params['address']);
-        params.putAll(coords);
+        def coords = geoLocatingService.locate(params['address'])
+        params.putAll(coords)
+        params.put("passwd", encryptionService.encrypt(params['passwd']))
     }
 
     def index() {
@@ -43,9 +46,9 @@ class UserController {
 
     def login() {
         def email = params['email']
-        def passwd = params['passwd']
+        def passwordFromForm = params['passwd'].toString()
         def user = User.findByEmail(email.toString());
-        if (user != null && user.passwd.toString().equals(passwd.toString())) {
+        if (user != null && encryptionService.isPasswordHasHash(passwordFromForm, user.passwd.toString())) {
             session.setAttribute("user", user);
         }
         redirect(action: "list");
