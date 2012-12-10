@@ -13,9 +13,19 @@ class UserController {
     def beforeInterceptor = [action: this.&setGeoLocation, only: ['save', 'update']]
 
     def setGeoLocation() {
-        def coords = geoLocatingService.locate(params['address'])
-        params.putAll(coords)
+
+        if (isAddressEntered()) {
+            def coords = geoLocatingService.locate(params['address'])
+            params.putAll(coords)
+        } else {
+            params['lat'] = Double.valueOf(params['lat'] as String)
+            params['lng'] = Double.valueOf(params['lng'] as String)
+        }
         params.put("passwd", encryptionService.encrypt(params['passwd']))
+    }
+
+    private boolean isAddressEntered() {
+        params['lat'] == -1 && params['lng'] == -1
     }
 
     def index() {
@@ -47,10 +57,18 @@ class UserController {
     def login() {
         def email = params['email']
         def passwordFromForm = params['passwd'].toString()
-        def user = User.findByEmail(email.toString());
-        if (user != null && encryptionService.isPasswordHasHash(passwordFromForm, user.passwd.toString())) {
-            session.setAttribute("user", user);
+        def user = User.findByEmail(email.toString())
+
+        if (user != null) {
+            if (encryptionService.isPasswordHasHash(passwordFromForm, user.passwd.toString())) {
+                session.setAttribute("user", user)
+            } else {
+                flash.message = "Неправильно введен пароль " + passwordFromForm
+            }
+        } else {
+            flash.message = "Пользователь не существует"
         }
+
         redirect(action: "list");
     }
 
@@ -65,13 +83,19 @@ class UserController {
 
     def save() {
         def userInstance = new User(params)
-        if (!userInstance.save(flush: true)) {
-            render(view: "create", model: [userInstance: userInstance])
-            return
-        }
+        if (userInstance.save(flush: true)) {
 
-        flash.message = message(code: 'default.created.message', args: [message(code: 'user.label', default: 'User'), userInstance.id])
-        redirect(action: "list")
+            //If registration is successful user will be logged in
+            session.setAttribute("user", userInstance)
+            redirect(action: "list")
+        } else {
+            flash.message = message(
+                    code: 'default.created.message',
+                    args: [message(code: 'user.label', default: 'User'),userInstance.id]
+            )
+            render(view: "create", model: [userInstance: userInstance])
+
+        }
     }
 
     def show(Long id) {

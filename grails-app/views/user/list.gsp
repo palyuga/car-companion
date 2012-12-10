@@ -128,6 +128,29 @@
                     $( "#amount" ).val($( "#slider" ).slider( "value" ) + " km");
                 });
             </g:if>
+            <g:else>
+                <!-- If user is not logged in -->
+                var marker = null;
+                function placeMarker(location) {
+                    if (marker != null) {
+                        marker.setMap(null);
+                    }
+                    marker = new google.maps.Marker({
+                        position: location,
+                        map: map
+                    });
+                }
+
+                function fillLatLngFields(location) {
+                    $("#latField").val(location.lat());
+                    $("#lngField").val(location.lng());
+                }
+
+                google.maps.event.addListener(map, 'click', function(event) {
+                    placeMarker(event.latLng);
+                    fillLatLngFields(event.latLng);
+                });
+            </g:else>
         }
 
         $(document).ready(function() {
@@ -183,6 +206,9 @@
 <body>
 <div id="pageWrapper">
     <div id="menu">
+        <g:if test="${flash.message}">
+            <div class="message" role="status">${flash.message}</div>
+        </g:if>
         <g:if test="${!isLogged}">
 
             <img class="logo" src="../images/car/logo.png"/>
@@ -215,7 +241,7 @@
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'name', 'error')} ">
                         <g:textField name="name" class="default-value" value="Имя"/>
                     </div>
-
+                    Вы можете указать положение на карте, либо ввести адрес:
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'address', 'error')} ">
                         <g:textField name="address" class="default-value" value="Домашний адрес"/>
                     </div>
@@ -228,11 +254,11 @@
                     </div>
 
                     <div style="display: none" class="fieldcontain ${hasErrors(bean: userInstance, field: 'lat', 'error')} required">
-                        <g:field type="hidden" name="lat" value="-1" required=""/>
+                        <g:field type="hidden" name="lat" value="-1" required="" id="latField"/>
                     </div>
 
                     <div style="display: none" class="fieldcontain ${hasErrors(bean: userInstance, field: 'lng', 'error')} required">
-                        <g:field  type="hidden" name="lng" value="-1" required=""/>
+                        <g:field  type="hidden" name="lng" value="-1" required="" id="lngField"/>
                     </div>
 
 
