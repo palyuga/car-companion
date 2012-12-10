@@ -51,7 +51,7 @@ class UserController {
 
         [userInstanceList: resultList,
          isLogged: (user != null),
-         currentUser: [lat: user?.lat, lng: user?.lng]]
+         currentUser: [name: user?.name, lat: user?.lat, lng: user?.lng]]
     }
 
     def login() {

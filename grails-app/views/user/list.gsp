@@ -154,7 +154,6 @@
         }
 
         $(document).ready(function() {
-
             $('#password-clear').show();
             $('#password').hide();
 
@@ -206,12 +205,13 @@
 <body>
 <div id="pageWrapper">
     <div id="menu">
+        <img class="logo" src="../images/car/logo.png"/>
         <g:if test="${flash.message}">
             <div class="message" role="status">${flash.message}</div>
         </g:if>
         <g:if test="${!isLogged}">
 
-            <img class="logo" src="../images/car/logo.png"/>
+
             <g:form action="login" >
 
                 <fieldset class="form">
@@ -278,6 +278,7 @@
 
         </g:if>
         <g:else>
+            <div>Привет, ${currentUser.name}! <g:link action="logoff">Выйти</g:link></div>
             <div id="slider"></div>
             <input type="text" id="amount" style="border: 0; color: #3f454a; font-weight: bold;" />
         </g:else>
