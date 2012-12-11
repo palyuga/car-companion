@@ -25,7 +25,7 @@ class UserController {
     }
 
     private boolean isAddressEntered() {
-        Double.valueOf(params['lat'].toString()) == -1.0
+        (!"Домашний адрес".equals(params['address']))
     }
 
     def index() {
