@@ -13,6 +13,9 @@ class RequestController {
                         save(failOnError: true)
             }
         }
+        render(contentType:"text/json") {
+            [result : true]
+        }
     }
 
     // find all requests that comes to user from other users
@@ -20,10 +23,14 @@ class RequestController {
         User user = (User)session.getAttribute("user")
         def resultList = []
         if (user != null) {
-            resultList = Request.findAllByDestAndStatus(
+            def requests = Request.findAllByDestAndStatus(
                 user,
                 Integer.parseInt(params['status'].toString())
             );
+            for (Request r : requests) {
+                r.src = User.findById(r.src.id)
+                resultList << [request: r, user: r.src]
+            }
         }
         render(contentType:"text/json") {
             [incomeRequests: resultList]
@@ -35,10 +42,14 @@ class RequestController {
         User user = (User)session.getAttribute("user")
         def resultList = []
         if (user != null) {
-            resultList = Request.findAllBySrcAndStatus(
+            def requests = Request.findAllBySrcAndStatus(
                 user,
                 Integer.parseInt(params['status'].toString())
             );
+            for (Request r : requests) {
+                r.dest = User.findById(r.dest.id)
+                resultList << [request : r, user: r.dest]
+            }
         }
         render(contentType:"text/json") {
             [outcomeRequests: resultList]
