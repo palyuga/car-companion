@@ -23,10 +23,16 @@ class RequestController {
         User user = (User)session.getAttribute("user")
         def resultList = []
         if (user != null) {
-            def requests = Request.findAllByDestAndStatus(
-                user,
-                Integer.parseInt(params['status'].toString())
-            );
+            def requests;
+            if (params['status'] == null) {
+                requests = Request.findAllByDest(user);
+            } else {
+                requests = Request.findAllByDestAndStatus(
+                    user,
+                    Integer.parseInt(params['status'].toString())
+                );
+            }
+
             for (Request r : requests) {
                 r.src = User.findById(r.src.id)
                 resultList << [request: r, user: r.src]
@@ -42,17 +48,22 @@ class RequestController {
         User user = (User)session.getAttribute("user")
         def resultList = []
         if (user != null) {
-            def requests = Request.findAllBySrcAndStatus(
-                user,
-                Integer.parseInt(params['status'].toString())
-            );
+            def requests
+            if (params['status'] == null) {
+                requests = Request.findAllBySrc(user);
+            } else {
+                requests = Request.findAllBySrcAndStatus(
+                    user,
+                    Integer.parseInt(params['status'].toString())
+                );
+            }
             for (Request r : requests) {
                 r.dest = User.findById(r.dest.id)
                 resultList << [request : r, user: r.dest]
             }
         }
         render(contentType:"text/json") {
-            [outcomeRequests: resultList]
+            [sentRequests: resultList]
         }
     }
 

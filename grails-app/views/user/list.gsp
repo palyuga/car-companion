@@ -14,6 +14,133 @@
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="../css/jquery-ui-1.9.2.custom.min.css"/>
     <script type="text/javascript">
+
+        function sendRequest(userId) {
+            jQuery.ajax({
+                type: 'POST',
+                data: {'destId': userId},
+                url: '/car-companion/request/addRequest',
+                success:
+                        function(data,textStatus){
+                            requestCallback(userId, "Запрос отправлен");
+                            showSentRequests();
+                        },
+                error:
+                        function(XMLHttpRequest,textStatus,errorThrown){
+                            requestCallback(userId, "Ошибка");
+                        }
+            });
+            return false;
+        }
+
+        function requestCallback(userId, message){
+            $("#req" + userId).html(message);
+        }
+
+        function showSentRequests() {
+            jQuery.ajax({
+                type: 'POST',
+                url: '/car-companion/request/listOutcome',
+                dataType: "json",
+                success:
+                        function(data){
+                            fillSentRequests(data);
+                        },
+                error:
+                        function(XMLHttpRequest,textStatus,errorThrown){
+                            fillSentRequests("Ошибка");
+                        }
+            });
+        }
+
+        function showIncomingRequests() {
+            jQuery.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '/car-companion/request/listIncome',
+                success:
+                        function(data){
+                            fillIncomingRequests(data);
+                        },
+                error:
+                        function(XMLHttpRequest,textStatus,errorThrown){
+                            fillIncomingRequests("Ошибка");
+                        }
+            });
+        }
+
+        function fillIncomingRequests(json) {
+            var text = (json.incomeRequests.length != 0)
+                    ? '<div class=\"h2\"> Полученные запросы </div>' :
+                    '<div class=\"h2\"> Нет полученных запросов </div>';
+            for (var i = 0, len = json.incomeRequests.length; i < len; ++i) {
+                var req = json.incomeRequests[i];
+
+                if (req.request.status == 0) {
+                     status = '<a class="reqLink" onclick="acceptReq(' + req.request.id + ')">'
+                      + 'Принять' + '</a> ' + ' &nbsp;' + ' <a class="reqLink" onclick="declineReq(' + req.request.id + ')">'
+                      + 'Отклонить' + '</a>'
+                } else if (req.request.status == 1) {
+                    status = "Принят";
+                } else if (req.request.status == 2) {
+                    status = "Отклонен";
+                }
+                text += "<div class=\"row\"> От пользователя: <span class=\"hh\">" + req.user.name + "</span>"
+                        + "<br/> <span class=\"hh\">" + status + "</span></div>"
+            }
+            $("#income").html(text);
+        }
+
+        function fillSentRequests(json) {
+            var text = (json.sentRequests.length != 0)
+                    ? '<div class=\"h2\"> Отправленные запросы </div>'
+                    : '<div class=\"h2\"> Нет отправленных запросов </div>';
+            for (var i = 0, len = json.sentRequests.length; i < len; ++i) {
+                var req = json.sentRequests[i];
+                var status = "Не рассмотрен";
+                if (req.request.status == 1) {
+                    status = "Принят";
+                } else if (req.request.status == 2) {
+                    status = "Отклонен";
+                }
+                text += "<div class=\"row\"> Пользователю: <span class=\"hh\">" + req.user.name + "</span>"
+                        + "<br/> Статус: <span class=\"hh\">" + status + "</span></div>"
+            }
+            $("#outcome").html(text);
+        }
+
+        function acceptReq(id) {
+            jQuery.ajax({
+                type: 'POST',
+                data: {'requestId': id},
+                dataType: 'json',
+                url: '/car-companion/request/acceptRequest',
+                success:
+                        showIncomingRequests(),
+                error:
+                        function(XMLHttpRequest,textStatus,errorThrown){
+                            fillIncomingRequests("Ошибка");
+                        }
+            });
+
+
+        }
+
+        function declineReq(id) {
+            jQuery.ajax({
+                type: 'POST',
+                data: {'requestId': id},
+                dataType: 'json',
+                url: '/car-companion/request/declineRequest',
+                success:
+                        showIncomingRequests(),
+                error:
+                        function(XMLHttpRequest,textStatus,errorThrown){
+                            fillIncomingRequests("Ошибка");
+                        }
+            });
+        }
+
         function initialize() {
             var latlng = new google.maps.LatLng(
                     <g:if test="${isLogged}">${currentUser.lat}</g:if><g:else>54.9688974</g:else>,
@@ -56,7 +183,6 @@
                         new google.maps.Point(0,32)
                 );
 
-
             var delayBetweenDropping = 50;
             <g:each in="${userInstanceList}" status="i" var="user">
 
@@ -71,10 +197,13 @@
                                 position: new google.maps.LatLng(${user.lat}, ${user.lng})
                             });
 
-                    content[${i}] = '<div>' + '${user.name}' + '</div> <div>'
-                            + '${user.address}' + '</div> <div>'
-                            + (${user.hasCar} ? 'Есть машина' : 'Нет машины') + '</div> <div>'
-                            + 'Email: ' + '${user.email}' + '</div>';
+                    content[${i}] = '<div class="info"><div> Меня зовут ' + '<span class="h">${user.name}</span>' + '</div> <div>'
+                            + 'Я живу на <span class="h">${user.address}</span>' + '</div> <div>'
+                            + 'У меня <span class="h">'+ (${user.hasCar} ? 'есть машина' : 'нет машины') + '</span></div> <div class="req">'
+                            + '<span id="req${user.id}">'
+                            + '<a class="reqLink" onclick="sendRequest(${user.id})">'
+                            + 'Отправить запрос' + '</a>' + '</span>'
+                            + '</div></div>';
 
                     infoWindows[${i}] = new google.maps.InfoWindow({
                         content: content[${i}]
@@ -83,6 +212,26 @@
                     google.maps.event.addListener(markers[${i}], 'click', function(){
                         infoWindows[${i}].open(map, markers[${i}])
                     });
+
+                    var mylatlng = new google.maps.LatLng(${currentUser.lat}, ${currentUser.lng});
+                    var bounds = new google.maps.LatLngBounds();
+                    bounds.extend(mylatlng);
+                    for (var i = 0; i < markers.length; i++) {
+                        var userLatLng = markers[i].position;
+                        var distance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, mylatlng);
+                        if (distance/1000 > 1) {
+                            if (markers[i].map != null) {
+                                markers[i].setMap(null);
+                            }
+                        } else {
+                            bounds.extend(userLatLng);
+                            if (markers[i].map == null) {
+                                markers[i].setMap(map);
+                            }
+                        }
+                    }
+                    map.fitBounds(bounds);
+
                 },
                 '${i}' * delayBetweenDropping);
 
@@ -104,7 +253,7 @@
                         max: 15,
                         step: 1,
                         slide: function( event, ui ) {
-                            $( "#amount" ).val( ui.value + " km");
+                            $( "#amount" ).html( ui.value );
                             var mylatlng = new google.maps.LatLng(${currentUser.lat}, ${currentUser.lng});
                             var bounds = new google.maps.LatLngBounds();
                             bounds.extend(mylatlng);
@@ -127,6 +276,8 @@
                     });
                     $( "#amount" ).val($( "#slider" ).slider( "value" ) + " km");
                 });
+                showIncomingRequests();
+                showSentRequests();
             </g:if>
             <g:else>
                 <!-- If user is not logged in -->
@@ -228,7 +379,7 @@
                 </fieldset>
             </g:form>
             <g:form action="save" >
-                <img src="../images/car/firsttime.png" id="firsttime"/>
+                <div class="stext marg-left">Впервые здесь? Приcоединяйтесь:</div>
                 <fieldset class="form">
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'email', 'error')}">
                         <g:field type="email" class="default-value" name="email" required="" value="Адрес эл. почты"/>
@@ -241,18 +392,18 @@
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'name', 'error')} ">
                         <g:textField name="name" class="default-value" value="Имя"/>
                     </div>
-                    Вы можете указать положение на карте, либо ввести адрес:
+                    <div class="stext marg-left">Вы можете указать положение на карте, либо ввести адрес:</div>
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'address', 'error')} ">
                         <g:textField name="address" class="default-value" value="Домашний адрес"/>
                     </div>
 
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'hasCar', 'error')} ">
-                        <label for="hasCar">
+                        <label class="stext" for="hasCar">
                             <g:message code="user.hasCar.label" default="У меня есть машина" />
                         </label>
                         <g:checkBox style="width: 40px"name="hasCar" value="${userInstance?.hasCar}" />
                     </div>
-
+                    <br/>
                     <div style="display: none" class="fieldcontain ${hasErrors(bean: userInstance, field: 'lat', 'error')} required">
                         <g:field type="hidden" name="lat" value="-1" required="" id="latField"/>
                     </div>
@@ -264,7 +415,7 @@
 
 
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'office', 'error')} required">
-                        <label for="office">
+                        <label class="stext" for="office">
                             <g:message code="user.office.label" default="Расположение офиса" />
                         </label>
                         <g:select id="office" name="office.id" from="${car.companion.Office.list()}" optionKey="id" required="" value="${userInstance?.office?.id}" class="many-to-one"/>
@@ -278,9 +429,21 @@
 
         </g:if>
         <g:else>
-            <div>Привет, ${currentUser.name}! <g:link action="logoff">Выйти</g:link></div>
+            <div id="hello"><span class="text">Добро пожаловать, ${currentUser.name}!</span>
+                <g:link id="logout-link" action="logoff">(Выйти)</g:link>
+            </div>
+
+
             <div id="slider"></div>
-            <input type="text" id="amount" style="border: 0; color: #3f454a; font-weight: bold;" />
+            <div class="companions-info">
+                <span class="grey-text">
+                    Показаны попутчики в радиусе <span id="amount">1</span> км.
+                </span>
+            </div>
+            <div id="requests">
+                <div id="income"></div>
+                <div id="outcome"></div>
+            </div>
         </g:else>
     </div>
     <div id="map">

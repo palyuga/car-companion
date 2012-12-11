@@ -25,7 +25,7 @@ class UserController {
     }
 
     private boolean isAddressEntered() {
-        params['lat'] == -1 && params['lng'] == -1
+        Double.valueOf(params['lat'].toString()) == -1.0
     }
 
     def index() {
