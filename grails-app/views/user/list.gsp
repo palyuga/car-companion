@@ -12,7 +12,7 @@
     </script>
     <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
-    <link rel="stylesheet" href="../css/jquery-ui-1.9.2.custom.min.css"/>
+    <link rel="stylesheet" href="css/jquery-ui-1.9.2.custom.min.css"/>
     <script type="text/javascript">
 
         function sendRequest(userId) {
@@ -163,21 +163,21 @@
             var infoWindows = [];
             <g:if test="${isLogged}">
                 var curUserImage = new google.maps.MarkerImage(
-                        '../images/man.png',
+                        'images/man.png',
                         new google.maps.Size(24,24),
                         new google.maps.Point(0,0),
                         new google.maps.Point(0,24)
                 );
 
                 var pedestrianImage = new google.maps.MarkerImage(
-                        '../images/car/user.png',
+                        'images/car/user.png',
                         new google.maps.Size(32,32),
                         new google.maps.Point(0,0),
                         new google.maps.Point(0,32)
                 );
 
                 var carImage = new google.maps.MarkerImage(
-                        '../images/car/car.png',
+                        'images/car/car.png',
                         new google.maps.Size(32,32),
                         new google.maps.Point(0,0),
                         new google.maps.Point(0,32)
@@ -356,7 +356,7 @@
 <body>
 <div id="pageWrapper">
     <div id="menu">
-        <img class="logo" src="../images/car/logo.png"/>
+        <img class="logo" src="images/car/logo.png"/>
         <g:if test="${flash.message}">
             <div class="message" role="status">${flash.message}</div>
         </g:if>
