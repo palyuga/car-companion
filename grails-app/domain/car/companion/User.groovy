@@ -3,6 +3,7 @@ package car.companion
 class User {
 
     String name
+    String surname
     String email
     String passwd
     Boolean hasCar

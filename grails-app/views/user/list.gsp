@@ -7,13 +7,22 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <g:set var="entityName" value="${message(code: 'user.label', default: 'User')}" />
     <title><g:message code="default.list.label" args="[entityName]" /></title>
+    <g:javascript library="application" />
+    <modalbox:modalIncludes />
     <script type="text/javascript"
             src="https://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry">
     </script>
     <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
-    <link rel="stylesheet" href="../css/jquery-ui-1.9.2.custom.min.css"/>
     <script type="text/javascript">
+        $(function() {
+            $("#sendRequestButton")
+                    .button()
+                    .click(function( event ) {
+                        event.preventDefault();
+                        sendRequest(null);
+                    });
+        });
 
         function sendRequest(userId) {
             jQuery.ajax({
@@ -31,6 +40,11 @@
                         }
             });
             return false;
+        }
+
+        function showSendRequestWindow(userId) {
+            $("#sendRequest #userId").val(userId);
+            $("#sendRequest").dialog({ resizable: false });
         }
 
         function requestCallback(userId, message){
@@ -80,12 +94,12 @@
                      status = '<a class="reqLink" onclick="acceptReq(' + req.request.id + ')">'
                       + 'Принять' + '</a> ' + ' &nbsp;' + ' <a class="reqLink" onclick="declineReq(' + req.request.id + ')">'
                       + 'Отклонить' + '</a>'
-                } else if (req.request.status == 1) {
+                } else if (req.request.status == ${car.companion.Request.ACCEPTED}) {
                     status = "Принят";
-                } else if (req.request.status == 2) {
+                } else if (req.request.status == ${car.companion.Request.DECLINED}) {
                     status = "Отклонен";
                 }
-                text += "<div class=\"row\"> От пользователя: <span class=\"hh\">" + req.user.name + "</span>"
+                text += "<div class=\"row\"> От пользователя: <span class=\"hh\">" + req.user.name + " " + req.user.surname + "</span>"
                         + "<br/> <span class=\"hh\">" + status + "</span></div>"
             }
             $("#income").html(text);
@@ -98,12 +112,12 @@
             for (var i = 0, len = json.sentRequests.length; i < len; ++i) {
                 var req = json.sentRequests[i];
                 var status = "Не рассмотрен";
-                if (req.request.status == 1) {
+                if (req.request.status == ${car.companion.Request.ACCEPTED}) {
                     status = "Принят";
-                } else if (req.request.status == 2) {
+                } else if (req.request.status == ${car.companion.Request.DECLINED}) {
                     status = "Отклонен";
                 }
-                text += "<div class=\"row\"> Пользователю: <span class=\"hh\">" + req.user.name + "</span>"
+                text += "<div class=\"row\"> Пользователю: <span class=\"hh\">" + req.user.name + " " + req.user.surname + "</span>"
                         + "<br/> Статус: <span class=\"hh\">" + status + "</span></div>"
             }
             $("#outcome").html(text);
@@ -163,21 +177,21 @@
             var infoWindows = [];
             <g:if test="${isLogged}">
                 var curUserImage = new google.maps.MarkerImage(
-                        '../images/man.png',
+                        'images/man.png',
                         new google.maps.Size(24,24),
                         new google.maps.Point(0,0),
                         new google.maps.Point(0,24)
                 );
 
                 var pedestrianImage = new google.maps.MarkerImage(
-                        '../images/car/user.png',
+                        'images/car/user.png',
                         new google.maps.Size(32,32),
                         new google.maps.Point(0,0),
                         new google.maps.Point(0,32)
                 );
 
                 var carImage = new google.maps.MarkerImage(
-                        '../images/car/car.png',
+                        'images/car/car.png',
                         new google.maps.Size(32,32),
                         new google.maps.Point(0,0),
                         new google.maps.Point(0,32)
@@ -197,11 +211,11 @@
                                 position: new google.maps.LatLng(${user.lat}, ${user.lng})
                             });
 
-                    content[${i}] = '<div class="info"><div> Меня зовут ' + '<span class="h">${user.name}</span>' + '</div> <div>'
+                    content[${i}] = '<div class="info"><div> Меня зовут ' + '<span class="h">${user.name} ${user.surname}</span>' + '</div> <div>'
                             + 'Я живу на <span class="h">${user.address}</span>' + '</div> <div>'
                             + 'У меня <span class="h">'+ (${user.hasCar} ? 'есть машина' : 'нет машины') + '</span></div> <div class="req">'
                             + '<span id="req${user.id}">'
-                            + '<a class="reqLink" onclick="sendRequest(${user.id})">'
+                            + '<a class="reqLink" onclick="showSendRequestWindow(${user.id})">'
                             + 'Отправить запрос' + '</a>' + '</span>'
                             + '</div></div>';
 
@@ -356,7 +370,7 @@
 <body>
 <div id="pageWrapper">
     <div id="menu">
-        <img class="logo" src="../images/car/logo.png"/>
+        <img class="logo" src="images/car/logo.png"/>
         <g:if test="${flash.message}">
             <div class="message" role="status">${flash.message}</div>
         </g:if>
@@ -390,11 +404,14 @@
                     </div>
 
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'name', 'error')} ">
-                        <g:textField name="name" class="default-value" value="Имя"/>
+                        <g:field type="text" name="name" class="default-value" required="" value="Имя"/>
+                    </div>
+                    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'surname', 'error')} ">
+                        <g:textField name="surname" class="default-value" required="" value="Фамилия"/>
                     </div>
                     <div class="stext marg-left">Вы можете указать положение на карте, либо ввести адрес:</div>
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'address', 'error')} ">
-                        <g:textField name="address" class="default-value" value="Домашний адрес"/>
+                        <g:textField name="address" class="default-value" required="" value="Домашний адрес"/>
                     </div>
 
                     <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'hasCar', 'error')} ">
@@ -445,6 +462,16 @@
                 <div id="outcome"></div>
             </div>
         </g:else>
+        <div id="sendRequest" class="requestDialog">
+            <input id="userId" type="hidden"/>
+            Send
+            <button id="sendRequestButton">Отправить</button>
+        </div>
+        <div id="replyRequest" class="requestDialog">
+            Reply
+            <button>Отправить</button>
+        </div>
+
     </div>
     <div id="map">
         <div id="map_canvas"></div>

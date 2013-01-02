@@ -10,9 +10,16 @@ class Request {
     User        dest
     Integer     status // 0 - NEW, 1 - ACCEPTED, 2 - DECLINED
     Date        date
+    String requestMessage
+    String replyMessage
 
     // makes many-to-many with the same class
     static hasMany = [src : User, dest : User]
 
     static belongsTo = User
+
+    static constraints = {
+        requestMessage(blank: true, nullable: true)
+        replyMessage(blank: true, nullable: true)
+    }
 }

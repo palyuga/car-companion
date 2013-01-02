@@ -9,8 +9,13 @@ class RequestController {
         if (user != null) {
             User destUser = User.findById(Long.parseLong(params['destId'].toString()));
             if (destUser != null) {
-                new Request(src: user, dest: destUser, status: Request.NEW, date: new Date()).
-                        save(failOnError: true)
+                new Request(
+                    src: user,
+                    dest: destUser,
+                    status: Request.NEW,
+                    date: new Date(),
+                    requestMessage: params['requestMessage']
+                ).save(failOnError: true)
             }
         }
         render(contentType:"text/json") {
@@ -72,6 +77,7 @@ class RequestController {
         def res = false
         if (request != null) {
             request.status = Request.ACCEPTED;
+            request.replyMessage = params['replyMessage'];
             request.save(failOnError: true);
             res = true
         }
@@ -85,6 +91,7 @@ class RequestController {
         def res = false
         if (request != null) {
             request.status = Request.DECLINED;
+            request.replyMessage = params['replyMessage'];
             request.save(failOnError: true);
             res = true
         }

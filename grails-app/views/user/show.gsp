@@ -86,16 +86,6 @@
 				</li>
 				</g:if>
 			
-
-				<g:if test="${userInstance?.passwd}">
-				<li class="fieldcontain">
-					<span id="passwd-label" class="property-label"><g:message code="user.passwd.label" default="Passwd" /></span>
-					
-						<span class="property-value" aria-labelledby="passwd-label"><g:fieldValue bean="${userInstance}" field="passwd"/></span>
-					
-				</li>
-				</g:if>
-			
 			</ol>
 			<g:form>
 				<fieldset class="buttons">
