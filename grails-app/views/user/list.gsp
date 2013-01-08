@@ -191,96 +191,95 @@
 </head>
 <body>
     <div id="menu">
-        <img class="logo" src="images/car/logo.png"/>
-        <g:if test="${flash.message}">
-            <div class="message" role="status">${flash.message}</div>
-        </g:if>
-        <g:if test="${!isLogged}">
-            <g:form action="login" >
+        <div id="menu-content">
+            <img class="logo" src="images/car/logo-car.png"/>
+            <g:if test="${flash.message}">
+                <div class="message" role="status">${flash.message}</div>
+            </g:if>
+            <g:if test="${!isLogged}">
+                <g:form action="login" >
 
-                <fieldset class="form">
-                    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'email', 'error')} ">
-                        <g:textField name="email" class="default-value" value="Адрес эл. почты"/>
-                    </div>
-                    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'passwd', 'error')} ">
-                        <g:passwordField id="password" name="passwd"/>
-                        <input id="password-clear" value="Пароль"/>
-                    </div>
-                </fieldset>
-                <fieldset class="buttons">
-                    <g:submitButton name="login" class="login" value="" />
-                </fieldset>
-            </g:form>
-            <g:form action="save" >
-                <div class="stext marg-left">Впервые здесь? Приcоединяйтесь:</div>
-                <fieldset class="form">
-                    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'email', 'error')}">
-                        <g:field type="email" class="default-value" name="email" required="" value="Адрес эл. почты"/>
-                    </div>
-                    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'passwd', 'error')} ">
-                        <g:passwordField name="passwd" id="password2"/>
-                        <input id="password-clear2" value="Пароль"/>
-                    </div>
+                    <fieldset class="form">
+                        <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'email', 'error')} ">
+                            <g:textField name="email" class="default-value" value="Адрес эл. почты"/>
+                        </div>
+                        <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'passwd', 'error')} ">
+                            <g:passwordField id="password" name="passwd"/>
+                            <input id="password-clear" value="Пароль"/>
+                        </div>
+                    </fieldset>
 
-                    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'name', 'error')} ">
-                        <g:field type="text" name="name" class="default-value" required="" value="Имя"/>
-                    </div>
-                    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'surname', 'error')} ">
-                        <g:textField name="surname" class="default-value" required="" value="Фамилия"/>
-                    </div>
-                    <div class="stext marg-left">Вы можете указать положение на карте, либо ввести адрес:</div>
-                    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'address', 'error')} ">
-                        <g:textField name="address" class="default-value" required="" value="Домашний адрес"/>
-                    </div>
+                    <g:submitButton name="login" id="login-button" class="btn btn-warning" value="Войти" />
 
-                    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'hasCar', 'error')} ">
-                        <label class="stext" for="hasCar">
-                            <g:message code="user.hasCar.label" default="У меня есть машина" />
-                        </label>
-                        <g:checkBox style="width: 40px"name="hasCar" value="${userInstance?.hasCar}" />
-                    </div>
-                    <br/>
-                    <div style="display: none" class="fieldcontain ${hasErrors(bean: userInstance, field: 'lat', 'error')} required">
-                        <g:field type="hidden" name="lat" value="-1" required="" id="latField"/>
-                    </div>
+                </g:form>
+                <g:form action="save" >
+                    <div class="intro stext">Впервые здесь? Приcоединяйтесь:</div>
+                    <fieldset class="form">
+                        <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'email', 'error')}">
+                            <g:field type="email" class="default-value" name="email" required="" value="Адрес эл. почты"/>
+                        </div>
+                        <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'passwd', 'error')} ">
+                            <g:passwordField name="passwd" id="password2"/>
+                            <input id="password-clear2" value="Пароль"/>
+                        </div>
 
-                    <div style="display: none" class="fieldcontain ${hasErrors(bean: userInstance, field: 'lng', 'error')} required">
-                        <g:field  type="hidden" name="lng" value="-1" required="" id="lngField"/>
-                    </div>
+                        <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'name', 'error')} ">
+                            <g:field type="text" name="name" class="default-value" required="" value="Имя"/>
+                        </div>
+                        <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'surname', 'error')} ">
+                            <g:textField name="surname" class="default-value" required="" value="Фамилия"/>
+                        </div>
+                        <div class="stext margin-top">Вы можете указать место жительства на карте, либо ввести адрес:</div>
+                        <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'address', 'error')} ">
+                            <g:textField name="address" class="default-value" required="" value="Домашний адрес"/>
+                        </div>
 
+                        <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'hasCar', 'error')} ">
+                            <label class="stext" for="hasCar">
+                                <g:message code="user.hasCar.label" default="У меня есть машина" />
+                            </label>
+                            <g:checkBox style="width: 40px"name="hasCar" value="${userInstance?.hasCar}" />
+                        </div>
+                        <br/>
+                        <div style="display: none" class="fieldcontain ${hasErrors(bean: userInstance, field: 'lat', 'error')} required">
+                            <g:field type="hidden" name="lat" value="-1" required="" id="latField"/>
+                        </div>
 
-
-                    <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'office', 'error')} required">
-                        <label class="stext" for="office">
-                            <g:message code="user.office.label" default="Расположение офиса" />
-                        </label>
-                        <g:select id="office" name="office.id" from="${car.companion.Office.list()}" optionKey="id" required="" value="${userInstance?.office?.id}" class="many-to-one"/>
-                    </div>
-                </fieldset>
-                <fieldset class="buttons">
-                    <g:submitButton name="create" class="save" id="register" value=""/>
-                </fieldset>
-            </g:form>
+                        <div style="display: none" class="fieldcontain ${hasErrors(bean: userInstance, field: 'lng', 'error')} required">
+                            <g:field  type="hidden" name="lng" value="-1" required="" id="lngField"/>
+                        </div>
 
 
-        </g:if>
-        <g:else>
-            <div id="hello"><span class="text">Добро пожаловать, ${currentUser.name}!</span>
-                <g:link id="logout-link" action="logoff">(Выйти)</g:link>
-            </div>
+
+                        <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'office', 'error')} required">
+                            <label class="stext" for="office">
+                                <g:message code="user.office.label" default="Расположение офиса" />
+                            </label>
+                            <g:select id="office" name="office.id" from="${car.companion.Office.list()}" optionKey="id" required="" value="${userInstance?.office?.id}" class="many-to-one"/>
+                        </div>
+                    </fieldset>
+
+                    <g:submitButton name="create" class="btn btn-success" id="register-button" value="Регистрация"/>
+                    </g:form>
+            </g:if>
+            <g:else>
+                <div id="hello"><span class="text">Добро пожаловать, ${currentUser.name}!</span>
+                    <g:link id="logout-link" action="logoff">(Выйти)</g:link>
+                </div>
 
 
-            <div id="slider"></div>
-            <div class="companions-info">
-                <span class="grey-text">
-                    Показаны попутчики в радиусе <span id="amount">1</span> км.
-                </span>
-            </div>
-            <div id="requests">
-                <div id="income"></div>
-                <div id="outcome"></div>
-            </div>       s
-        </g:else>
+                <div id="slider"></div>
+                <div class="companions-info">
+                    <span class="grey-text">
+                        Показаны попутчики в радиусе <span id="amount">1</span> км.
+                    </span>
+                </div>
+                <div id="requests">
+                    <div id="income"></div>
+                    <div id="outcome"></div>
+                </div>
+            </g:else>
+        </div>
     </div>
     <div id="map">
         <div id="map_canvas"></div>
