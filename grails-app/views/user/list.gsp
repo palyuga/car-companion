@@ -190,7 +190,6 @@
     </script>
 </head>
 <body>
-<div id="pageWrapper">
     <div id="menu">
         <img class="logo" src="images/car/logo.png"/>
         <g:if test="${flash.message}">
@@ -280,14 +279,11 @@
             <div id="requests">
                 <div id="income"></div>
                 <div id="outcome"></div>
-            </div>
+            </div>       s
         </g:else>
     </div>
     <div id="map">
         <div id="map_canvas"></div>
     </div>
-    <div class="clear"></div>
-</div>
-
 </body>
 </html>
