@@ -6,6 +6,8 @@ class UserController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+    public static final String USER_SESSION_KEY = "user"
+
     def geoLocatingService
 
     def encryptionService
@@ -34,24 +36,35 @@ class UserController {
 
     def list(Integer max) {
 
-        User user = (User)session.getAttribute("user")
+        User user = (User)session.getAttribute(USER_SESSION_KEY)
         def resultList = []
         if (user != null) {
             user.refresh()
             resultList = User.findAllByOffice(user.office)
         }
-        Iterator<User> it = resultList.iterator();
+        Iterator<User> it = resultList.iterator()
         while (it.hasNext()) {
-            User u = it.next();
-            if (u.email.equals(user.email)) {
-                it.remove();
-                break;
+            User currentUser = it.next()
+            if (isNewRequestExists(user, currentUser)) {
+                currentUser.canYouSendHimRequest = false
+            }
+            if (currentUser.email.equals(user.email)) {
+                it.remove()
             }
         }
 
         [userInstanceList: resultList,
          isLogged: (user != null),
          currentUser: [name: user?.name, lat: user?.lat, lng: user?.lng]]
+    }
+
+    def boolean isNewRequestExists(User sender, User recipient) {
+        Request request = Request.findByStatusAndSrcAndDest(
+                Request.NEW,
+                sender,
+                recipient
+        )
+        return request != null
     }
 
     def login() {
@@ -61,7 +74,7 @@ class UserController {
 
         if (user != null) {
             if (encryptionService.isPasswordHasHash(passwordFromForm, user.passwd.toString())) {
-                session.setAttribute("user", user)
+                session.setAttribute(USER_SESSION_KEY, user)
             } else {
                 flash.message = "Неправильно введен пароль " + passwordFromForm
             }
@@ -86,7 +99,7 @@ class UserController {
         if (userInstance.save(flush: true)) {
 
             //If registration is successful user will be logged in
-            session.setAttribute("user", userInstance)
+            session.setAttribute(USER_SESSION_KEY, userInstance)
             redirect(action: "list")
         } else {
             flash.message = message(

@@ -99,4 +99,24 @@ class RequestController {
             [result: res]
         }
     }
+
+    def isNewRequestExists() {
+        def result = false
+        if (params['recipientId'] != null) {
+            User sender = (User)session.getAttribute("user")
+            User recipient = User.findById(Long.parseLong(params['recipientId'].toString()))
+
+            if (sender != null && recipient != null) {
+                Request request = Request.findByStatusAndSrcAndDest(
+                        Request.NEW,
+                        sender,
+                        recipient
+                )
+                result = (request != null)
+            }
+        }
+        render(contentType:"text/json") {
+            [result: result]
+        }
+    }
 }

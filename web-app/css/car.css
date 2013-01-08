@@ -141,7 +141,11 @@ fieldset {
     margin-top: 21px;
     margin-left: 8px;
 }
-
+.messageBox {
+    resize: none;
+    height: 50px;
+    width: 198px;
+}
 #register {
     background-image: url(../images/car/reg-button.png);
     background-repeat: no-repeat;

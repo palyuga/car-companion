@@ -14,151 +14,13 @@
     </script>
     <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+    <script src="${resource(dir: 'js', file: 'sharecar.js')}"></script>
+    <script src="${resource(dir: 'js', file: 'inline-labels.js')}"></script>
     <script type="text/javascript">
-        $(function() {
-            $("#sendRequestButton")
-                    .button()
-                    .click(function( event ) {
-                        event.preventDefault();
-                        sendRequest(null);
-                    });
-        });
-
-        function sendRequest(userId) {
-            jQuery.ajax({
-                type: 'POST',
-                data: {'destId': userId},
-                url: '/car-companion/request/addRequest',
-                success:
-                        function(data,textStatus){
-                            requestCallback(userId, "Запрос отправлен");
-                            showSentRequests();
-                        },
-                error:
-                        function(XMLHttpRequest,textStatus,errorThrown){
-                            requestCallback(userId, "Ошибка");
-                        }
-            });
-            return false;
-        }
-
-        function showSendRequestWindow(userId) {
-            $("#sendRequest #userId").val(userId);
-            $("#sendRequest").dialog({ resizable: false });
-        }
-
-        function requestCallback(userId, message){
-            $("#req" + userId).html(message);
-        }
-
-        function showSentRequests() {
-            jQuery.ajax({
-                type: 'POST',
-                url: '/car-companion/request/listOutcome',
-                dataType: "json",
-                success:
-                        function(data){
-                            fillSentRequests(data);
-                        },
-                error:
-                        function(XMLHttpRequest,textStatus,errorThrown){
-                            fillSentRequests("Ошибка");
-                        }
-            });
-        }
-
-        function showIncomingRequests() {
-            jQuery.ajax({
-                type: 'POST',
-                dataType: 'json',
-                url: '/car-companion/request/listIncome',
-                success:
-                        function(data){
-                            fillIncomingRequests(data);
-                        },
-                error:
-                        function(XMLHttpRequest,textStatus,errorThrown){
-                            fillIncomingRequests("Ошибка");
-                        }
-            });
-        }
-
-        function fillIncomingRequests(json) {
-            var text = (json.incomeRequests.length != 0)
-                    ? '<div class=\"h2\"> Полученные запросы </div>' :
-                    '<div class=\"h2\"> Нет полученных запросов </div>';
-            for (var i = 0, len = json.incomeRequests.length; i < len; ++i) {
-                var req = json.incomeRequests[i];
-
-                if (req.request.status == 0) {
-                     status = '<a class="reqLink" onclick="acceptReq(' + req.request.id + ')">'
-                      + 'Принять' + '</a> ' + ' &nbsp;' + ' <a class="reqLink" onclick="declineReq(' + req.request.id + ')">'
-                      + 'Отклонить' + '</a>'
-                } else if (req.request.status == ${car.companion.Request.ACCEPTED}) {
-                    status = "Принят";
-                } else if (req.request.status == ${car.companion.Request.DECLINED}) {
-                    status = "Отклонен";
-                }
-                text += "<div class=\"row\"> От пользователя: <span class=\"hh\">" + req.user.name + " " + req.user.surname + "</span>"
-                        + "<br/> <span class=\"hh\">" + status + "</span></div>"
-            }
-            $("#income").html(text);
-        }
-
-        function fillSentRequests(json) {
-            var text = (json.sentRequests.length != 0)
-                    ? '<div class=\"h2\"> Отправленные запросы </div>'
-                    : '<div class=\"h2\"> Нет отправленных запросов </div>';
-            for (var i = 0, len = json.sentRequests.length; i < len; ++i) {
-                var req = json.sentRequests[i];
-                var status = "Не рассмотрен";
-                if (req.request.status == ${car.companion.Request.ACCEPTED}) {
-                    status = "Принят";
-                } else if (req.request.status == ${car.companion.Request.DECLINED}) {
-                    status = "Отклонен";
-                }
-                text += "<div class=\"row\"> Пользователю: <span class=\"hh\">" + req.user.name + " " + req.user.surname + "</span>"
-                        + "<br/> Статус: <span class=\"hh\">" + status + "</span></div>"
-            }
-            $("#outcome").html(text);
-        }
-
-        function acceptReq(id) {
-            jQuery.ajax({
-                type: 'POST',
-                data: {'requestId': id},
-                dataType: 'json',
-                url: '/car-companion/request/acceptRequest',
-                success:
-                        showIncomingRequests(),
-                error:
-                        function(XMLHttpRequest,textStatus,errorThrown){
-                            fillIncomingRequests("Ошибка");
-                        }
-            });
-
-
-        }
-
-        function declineReq(id) {
-            jQuery.ajax({
-                type: 'POST',
-                data: {'requestId': id},
-                dataType: 'json',
-                url: '/car-companion/request/declineRequest',
-                success:
-                        showIncomingRequests(),
-                error:
-                        function(XMLHttpRequest,textStatus,errorThrown){
-                            fillIncomingRequests("Ошибка");
-                        }
-            });
-        }
-
         function initialize() {
             var latlng = new google.maps.LatLng(
-                    <g:if test="${isLogged}">${currentUser.lat}</g:if><g:else>54.9688974</g:else>,
-                    <g:if test="${isLogged}">${currentUser.lng}</g:if><g:else>73.3846840</g:else>
+                <g:if test="${isLogged}">${currentUser.lat}</g:if><g:else>54.9688974</g:else>,
+                <g:if test="${isLogged}">${currentUser.lng}</g:if><g:else>73.3846840</g:else>
             );
 
             var myOptions = {
@@ -168,8 +30,8 @@
             };
 
             var map = new google.maps.Map(
-                    document.getElementById("map_canvas"),
-                    myOptions
+                document.getElementById("map_canvas"),
+                myOptions
             );
 
             var markers = [];
@@ -197,6 +59,8 @@
                         new google.maps.Point(0,32)
                 );
 
+
+
             var delayBetweenDropping = 50;
             <g:each in="${userInstanceList}" status="i" var="user">
 
@@ -211,13 +75,14 @@
                                 position: new google.maps.LatLng(${user.lat}, ${user.lng})
                             });
 
-                    content[${i}] = '<div class="info"><div> Меня зовут ' + '<span class="h">${user.name} ${user.surname}</span>' + '</div> <div>'
-                            + 'Я живу на <span class="h">${user.address}</span>' + '</div> <div>'
-                            + 'У меня <span class="h">'+ (${user.hasCar} ? 'есть машина' : 'нет машины') + '</span></div> <div class="req">'
-                            + '<span id="req${user.id}">'
-                            + '<a class="reqLink" onclick="showSendRequestWindow(${user.id})">'
-                            + 'Отправить запрос' + '</a>' + '</span>'
-                            + '</div></div>';
+                    content[${i}] = '<div class="info"><div> Меня зовут '
+                            + '<span class="h">${user.name} ${user.surname}</span>'
+                            + '</div> <div>'
+                            + 'Я живу на <span class="h">${user.address}</span>'
+                            + '</div> <div>'
+                            + 'У меня <span class="h">' + (${user.hasCar} ? 'есть машина' : 'нет машины') + '</span></div>'
+                            + ((${user.canYouSendHimRequest}) ? createRequestForm(${user.id}) : "Ваш запрос еще не рассмотрен")
+                            + '</div>';
 
                     infoWindows[${i}] = new google.maps.InfoWindow({
                         content: content[${i}]
@@ -297,13 +162,17 @@
                 <!-- If user is not logged in -->
                 var marker = null;
                 function placeMarker(location) {
-                    if (marker != null) {
-                        marker.setMap(null);
-                    }
+                    deleteEarlyPlacedMarker();
                     marker = new google.maps.Marker({
                         position: location,
                         map: map
                     });
+                }
+
+                function deleteEarlyPlacedMarker() {
+                    if (marker != null) {
+                        marker.setMap(null);
+                    }
                 }
 
                 function fillLatLngFields(location) {
@@ -318,53 +187,6 @@
             </g:else>
         }
 
-        $(document).ready(function() {
-            $('#password-clear').show();
-            $('#password').hide();
-
-            $('#password-clear').focus(function() {
-                $('#password-clear').hide();
-                $('#password').show();
-                $('#password').focus();
-            });
-            $('#password').blur(function() {
-                if($('#password').val() == '') {
-                    $('#password-clear').show();
-                    $('#password').hide();
-                }
-            });
-
-            $('#password-clear2').show();
-            $('#password2').hide();
-
-            $('#password-clear2').focus(function() {
-                $('#password-clear2').hide();
-                $('#password2').show();
-                $('#password2').focus();
-            });
-            $('#password2').blur(function() {
-                if($('#password2').val() == '') {
-                    $('#password-clear2').show();
-                    $('#password2').hide();
-                }
-            });
-
-            $('.default-value').each(function() {
-                var default_value = this.value;
-                $(this).focus(function() {
-                    if(this.value == default_value) {
-                        this.value = '';
-                    }
-                });
-                $(this).blur(function() {
-                    if(this.value == '') {
-                        this.value = default_value;
-                    }
-                });
-            });
-
-        });
-
     </script>
 </head>
 <body>
@@ -375,8 +197,6 @@
             <div class="message" role="status">${flash.message}</div>
         </g:if>
         <g:if test="${!isLogged}">
-
-
             <g:form action="login" >
 
                 <fieldset class="form">
@@ -462,16 +282,6 @@
                 <div id="outcome"></div>
             </div>
         </g:else>
-        <div id="sendRequest" class="requestDialog">
-            <input id="userId" type="hidden"/>
-            Send
-            <button id="sendRequestButton">Отправить</button>
-        </div>
-        <div id="replyRequest" class="requestDialog">
-            Reply
-            <button>Отправить</button>
-        </div>
-
     </div>
     <div id="map">
         <div id="map_canvas"></div>

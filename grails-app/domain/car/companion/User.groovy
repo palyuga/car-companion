@@ -10,6 +10,7 @@ class User {
     String address
     Double lat
     Double lng
+    Boolean canYouSendHimRequest = true
 
     static belongsTo = [office: Office]
 
@@ -20,4 +21,7 @@ class User {
     static constraints = {
         email(blank: false, unique: true, email: true)
     }
+
+    //This fields won't be stored in the database
+    static transients = ['canYouSendHimRequest']
 }
