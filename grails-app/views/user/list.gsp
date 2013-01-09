@@ -7,15 +7,11 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <g:set var="entityName" value="${message(code: 'user.label', default: 'User')}" />
     <title><g:message code="default.list.label" args="[entityName]" /></title>
-    <g:javascript library="application" />
-    <modalbox:modalIncludes />
     <script type="text/javascript"
             src="https://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry">
     </script>
-    <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <script src="${resource(dir: 'js', file: 'sharecar.js')}"></script>
-    <script src="${resource(dir: 'js', file: 'inline-labels.js')}"></script>
     <script type="text/javascript">
         function initialize() {
             var latlng = new google.maps.LatLng(
@@ -201,11 +197,10 @@
 
                     <fieldset class="form">
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'email', 'error')} ">
-                            <g:textField name="email" class="default-value" value="Адрес эл. почты"/>
+                            <g:textField name="email" required="required" placeholder="Адрес эл. почты"/>
                         </div>
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'passwd', 'error')} ">
-                            <g:passwordField id="password" name="passwd"/>
-                            <input id="password-clear" value="Пароль"/>
+                            <g:passwordField name="passwd" placeholder="Пароль" required="required"/>
                         </div>
                     </fieldset>
 
@@ -216,22 +211,21 @@
                     <div class="intro stext">Впервые здесь? Приcоединяйтесь:</div>
                     <fieldset class="form">
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'email', 'error')}">
-                            <g:field type="email" class="default-value" name="email" required="" value="Адрес эл. почты"/>
+                            <g:field type="email" class="default-value" name="email" required="required" placeholder="Адрес эл. почты"/>
                         </div>
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'passwd', 'error')} ">
-                            <g:passwordField name="passwd" id="password2"/>
-                            <input id="password-clear2" value="Пароль"/>
+                            <g:passwordField name="passwd" placeholder="Пароль" required="required"/>
                         </div>
 
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'name', 'error')} ">
-                            <g:field type="text" name="name" class="default-value" required="" value="Имя"/>
+                            <g:field type="text" name="name" required="required" placeholder="Имя"/>
                         </div>
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'surname', 'error')} ">
-                            <g:textField name="surname" class="default-value" required="" value="Фамилия"/>
+                            <g:textField name="surname" required="required" placeholder="Фамилия"/>
                         </div>
                         <div class="stext margin-top">Вы можете указать место жительства на карте, либо ввести адрес:</div>
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'address', 'error')} ">
-                            <g:textField name="address" class="default-value" required="" value="Домашний адрес"/>
+                            <g:textField name="address" required="required" placeholder="Домашний адрес"/>
                         </div>
 
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'hasCar', 'error')} ">
