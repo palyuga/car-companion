@@ -10,6 +10,7 @@
     <script type="text/javascript"
             src="https://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry">
     </script>
+    <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <script src="${resource(dir: 'js', file: 'sharecar.js')}"></script>
     <script type="text/javascript">

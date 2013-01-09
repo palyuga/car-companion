@@ -45,12 +45,14 @@ class UserController {
         Iterator<User> it = resultList.iterator()
         while (it.hasNext()) {
             User currentUser = it.next()
+            if (currentUser.email.equals(user.email)) {
+                it.remove()
+                continue
+            }
             if (isNewRequestExists(user, currentUser)) {
                 currentUser.canYouSendHimRequest = false
             }
-            if (currentUser.email.equals(user.email)) {
-                it.remove()
-            }
+
         }
 
         [userInstanceList: resultList,
@@ -74,12 +76,12 @@ class UserController {
 
         if (user != null) {
             if (encryptionService.isPasswordHasHash(passwordFromForm, user.passwd.toString())) {
-                session.setAttribute(USER_SESSION_KEY, user)
+                loginUser(user)
             } else {
-                flash.message = "Неправильно введен пароль " + passwordFromForm
+                flash.message = "Неправильно введен пароль"
             }
         } else {
-            flash.message = "Пользователь не существует"
+            flash.message = "Пользователь '" + email + "' не существует"
         }
 
         redirect(action: "list");
@@ -99,7 +101,7 @@ class UserController {
         if (userInstance.save(flush: true)) {
 
             //If registration is successful user will be logged in
-            session.setAttribute(USER_SESSION_KEY, userInstance)
+            loginUser(userInstance)
             redirect(action: "list")
         } else {
             flash.message = message(
@@ -109,6 +111,10 @@ class UserController {
             render(view: "create", model: [userInstance: userInstance])
 
         }
+    }
+
+    private void loginUser(User userInstance) {
+        session.setAttribute(USER_SESSION_KEY, userInstance)
     }
 
     def show(Long id) {

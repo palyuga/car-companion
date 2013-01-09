@@ -8,9 +8,8 @@
     height: 100%;
 }
 .message {
-    color: #D32;
-    margin-left: 20px;
-    font-size: 14px;
+    color: #E45D44;
+    font-size: 12px;
 }
 
 #menu {
@@ -26,7 +25,7 @@
 }
 
 #menu-content input[type=submit] {
-    width:255px;
+    width:252px;
 }
 
 #map {
@@ -164,7 +163,7 @@ input, select {
 #slider {
     margin-left: 7px;
     margin-top: 10px;
-    width: 280px;
+    width: 240px;
 }
 a {
     color: #aaa;
@@ -195,7 +194,7 @@ a:hover {
     font-weight: bold;
 }
 #office {
-    margin-left: 13px;
+    margin-left: 12px;
 }
 
 .req {
