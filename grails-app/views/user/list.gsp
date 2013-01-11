@@ -13,6 +13,8 @@
     <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <script src="${resource(dir: 'js', file: 'sharecar.js')}"></script>
+    <script src="${resource(dir: 'js', file: 'jquery.idTabs.min.js')}"></script>
+
     <script type="text/javascript">
         function initialize() {
             var latlng = new google.maps.LatLng(
@@ -151,9 +153,12 @@
                         }
                     });
                     $( "#amount" ).val($( "#slider" ).slider( "value" ) + " km");
+                    showIncomingRequests();
+                    showSentRequests();
+                    $("#requests ul").idTabs();
                 });
-                showIncomingRequests();
-                showSentRequests();
+
+
             </g:if>
             <g:else>
                 <!-- If user is not logged in -->
@@ -259,17 +264,22 @@
             </g:if>
             <g:else>
                 <div id="hello"><span class="text">Добро пожаловать, ${currentUser.name}!</span>
-                    <g:link id="logout-link" action="logoff">(Выйти)</g:link>
+                    <span class="link-color">(</span><g:link id="logout-link" action="logoff">Выйти</g:link><span class="link-color">)</span>
                 </div>
 
-
-                <div id="slider"></div>
-                <div class="companions-info">
-                    <span class="grey-text">
-                        Показаны попутчики в радиусе <span id="amount">1</span> км.
-                    </span>
+                <div id="slider-container">
+                    <div id="slider"></div>
+                    <div class="companions-info">
+                        <span class="grey-text">
+                            Показаны попутчики в радиусе <span id="amount">1</span> км.
+                        </span>
+                    </div>
                 </div>
-                <div id="requests">
+                <div id="requests" class="tabs">
+                    <ul>
+                        <li><a href="#income">Полученные</a></li>
+                        <li><a href="#outcome">Отправленные</a></li>
+                    </ul>
                     <div id="income"></div>
                     <div id="outcome"></div>
                 </div>

@@ -129,6 +129,9 @@ input, select {
     margin-top: 15px;
     margin-bottom: 2px;
 }
+.link-color {
+    color: #aaa;
+}
 
 #login {
     background-image: url(../images/car/enter-button.png);
@@ -161,10 +164,14 @@ input, select {
 }
 
 #slider {
-    margin-left: 7px;
-    margin-top: 10px;
+    margin-left: 6px;
     width: 240px;
 }
+
+#slider-container {
+    margin-top: 14px;
+}
+
 a {
     color: #aaa;
 }
@@ -175,6 +182,7 @@ a:hover {
 #hello {
     margin-left: 10px;
     color: #99CCCC;
+    font-size: 12px;
 }
 
 #amount {
@@ -187,6 +195,7 @@ a:hover {
 
 .grey-text {
     color: #ccc;
+    font-size: 12px;
 }
 
 .h {
@@ -221,17 +230,25 @@ a:hover {
 }
 
 .companions-info {
-    margin-top: 10px;
-    margin-left: 10px;
+    margin-top: 4px;
+    margin-left: 23px;
 }
 
 #requests {
-    margin-left: 10px;
+    margin-top: 20px;
     color: #aaa;
 }
 
 .row {
-    margin-top: 10px;
+    margin-top: 2px;
+    background: snow;
+    padding: 5px;
+    border: 1px dotted grey;
+}
+
+.row:hover {
+    background: #ddd;
+    cursor: pointer;
 }
 
 .hh {
@@ -239,9 +256,7 @@ a:hover {
 }
 
 .h2 {
-    font-weight: bold;
-    margin-left: 26px;
-    margin-top: 20px;
+    text-align: center;
 }
 
 .stext {
@@ -342,14 +357,54 @@ a:hover {
     background-color: #F89406;
 }
 
-.icon-white {
-    background-image: url(./images/glyphicons.png);
+/* Style for tabs */
+.tabs {
+}
+.tabs ul {
+    padding: 0;
+}
+.tabs li {
+    width: 50%;
+    list-style:none;
+    float:left;
+    margin-bottom: -1px;
+    text-align: center;
 }
 
-.icon-play {
-    background-position: -264px -72px;
+.tabs ul a {
+    display: block;
+    padding: 8px 0;
+    text-decoration: none!important;
+    margin-left: 0;
+    font: 11px Verdana;
+    color: white;
+    background: grey;
 }
 
-.icon-ok {
-    background-position: -288px 0;
+.tabs ul a:hover {
+    color:#FFF;
+    background:#D19405;
 }
+.tabs ul a.selected {
+    margin-bottom:0;
+    color:#000;
+    background: snow;
+    border-bottom:1px solid snow;
+    cursor:default;
+}
+.tabs > div {
+    padding: 5px;
+    *padding-top:3px;
+    *margin-top:-15px;
+    background: snow;
+    font:12px Helvetica;
+    clear:left;
+}
+
+.tabs #income, .tabs #outcome {
+    min-height: 50px;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+.tabs > div a { color:#000; font-weight:bold; }

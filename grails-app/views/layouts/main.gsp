@@ -16,7 +16,7 @@
 		<link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css">
 		<link rel="stylesheet" href="${resource(dir: 'css', file: 'car.css')}" type="text/css">
 		<link rel="stylesheet" href="${resource(dir: 'css', file: 'jquery-ui-1.9.2.custom.min.css')}" type="text/css">
-		<g:layoutHead/>
+        <g:layoutHead/>
 		<r:layoutResources />
 	</head>
 	<body onload="initialize()">

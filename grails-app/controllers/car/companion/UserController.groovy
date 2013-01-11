@@ -36,12 +36,14 @@ class UserController {
 
     def list(Integer max) {
 
-        User user = (User)session.getAttribute(USER_SESSION_KEY)
+        User user = getCurrentLoggedUser()
         def resultList = []
+
         if (user != null) {
             user.refresh()
             resultList = User.findAllByOffice(user.office)
         }
+
         Iterator<User> it = resultList.iterator()
         while (it.hasNext()) {
             User currentUser = it.next()
@@ -55,9 +57,15 @@ class UserController {
 
         }
 
-        [userInstanceList: resultList,
-         isLogged: (user != null),
-         currentUser: [name: user?.name, lat: user?.lat, lng: user?.lng]]
+        [
+            userInstanceList: resultList,
+            isLogged: (user != null),
+            currentUser: [name: user?.name, lat: user?.lat, lng: user?.lng]
+        ]
+    }
+
+    private User getCurrentLoggedUser() {
+        (User) session.getAttribute(USER_SESSION_KEY)
     }
 
     def boolean isNewRequestExists(User sender, User recipient) {

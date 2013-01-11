@@ -54,8 +54,7 @@ function showIncomingRequests() {
 
 function fillIncomingRequests(json) {
     var text = (json.incomeRequests.length != 0)
-        ? '<div class=\"h2\"> Полученные запросы </div>' :
-        '<div class=\"h2\"> Нет полученных запросов </div>';
+        ? '' : '<div class=\"h2\"> Нет полученных запросов </div>';
     for (var i = 0, len = json.incomeRequests.length; i < len; ++i) {
         var req = json.incomeRequests[i];
 
@@ -86,8 +85,7 @@ function createDeclineLink(requestId) {
 
 function fillSentRequests(json) {
     var text = (json.sentRequests.length != 0)
-        ? '<div class=\"h2\"> Отправленные запросы </div>'
-        : '<div class=\"h2\"> Нет отправленных запросов </div>';
+        ? '' : '<div class=\"h2\"> Нет отправленных запросов </div>';
     for (var i = 0, len = json.sentRequests.length; i < len; ++i) {
         var req = json.sentRequests[i];
         var status = "Не рассмотрен";
