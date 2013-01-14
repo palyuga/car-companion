@@ -144,8 +144,8 @@ input, select {
 }
 .messageBox {
     resize: none;
-    height: 50px;
-    width: 198px;
+    height: 70px;
+    width: 216px;
 }
 #register {
     background-image: url(../images/car/reg-button.png);
@@ -407,4 +407,12 @@ a:hover {
     overflow-y: scroll;
 }
 
-.tabs > div a { color:#000; font-weight:bold; }
+.tabs > div a {
+    text-decoration: underline;
+    color:#000;
+    font-weight:bold;
+}
+
+.sendRequestLink {
+    text-align: right;
+}

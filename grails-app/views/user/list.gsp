@@ -33,9 +33,10 @@
                 myOptions
             );
 
-            var markers = [];
-            var content = [];
-            var infoWindows = [];
+            markers = [];
+            ids = [];
+            content = [];
+            infoWindows = [];
             <g:if test="${isLogged}">
                 var curUserImage = new google.maps.MarkerImage(
                         'images/man.png',
@@ -82,6 +83,8 @@
                             + 'У меня <span class="h">' + (${user.hasCar} ? 'есть машина' : 'нет машины') + '</span></div>'
                             + ((${user.canYouSendHimRequest}) ? createRequestForm(${user.id}) : "Ваш запрос еще не рассмотрен")
                             + '</div>';
+
+                    ids[${i}] = ${user.id};
 
                     infoWindows[${i}] = new google.maps.InfoWindow({
                         content: content[${i}]

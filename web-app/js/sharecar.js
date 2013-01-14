@@ -135,9 +135,9 @@ function declineRequest(id, message) {
 
 function createRequestForm(recipientId) {
     return '<div id="req' + recipientId + '" class="req">'
-        + '<textarea class="messageBox" id="messageTo' + recipientId + '"></textarea>'
+        + '<textarea maxlength="140" class="messageBox" id="messageTo' + recipientId + '"></textarea>'
         + '<div class="sendRequestLink">'
-        + '<a class="reqLink" onclick="sendRequest(' + recipientId + ')">'
+        + '<a class="btn" onclick="sendRequest(' + recipientId + ')">'
         + 'Отправить запрос'
         + '</a>'
         + '</div></div>';
