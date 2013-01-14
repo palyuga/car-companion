@@ -121,6 +121,10 @@ fieldset {
     padding: 0;
 }
 
+.hiddenReplyForm {
+    display: none;
+}
+
 input, select {
     font-size: 14px;
 }
@@ -144,8 +148,8 @@ input, select {
 }
 .messageBox {
     resize: none;
-    height: 70px;
-    width: 216px;
+    height: 65px;
+    width: 198px;
 }
 #register {
     background-image: url(../images/car/reg-button.png);
@@ -175,8 +179,10 @@ input, select {
 a {
     color: #aaa;
 }
+
 a:hover {
     color: #888;
+    cursor: pointer;
 }
 
 #hello {
@@ -245,10 +251,16 @@ a:hover {
     padding: 5px;
     border: 1px dotted grey;
 }
-
+/*
 .row:hover {
     background: #ddd;
     cursor: pointer;
+}
+*/
+
+.sendRequestLink {
+    width: 211px;
+    text-align: right;
 }
 
 .hh {
@@ -408,11 +420,12 @@ a:hover {
 }
 
 .tabs > div a {
-    text-decoration: underline;
     color:#000;
     font-weight:bold;
+    text-decoration: underline;
 }
 
-.sendRequestLink {
-    text-align: right;
+.tabs > div a:hover {
+    color: #D19405;
+    text-decoration: underline;
 }

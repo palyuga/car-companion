@@ -17,7 +17,7 @@
 
     <script type="text/javascript">
         function initialize() {
-            var latlng = new google.maps.LatLng(
+            latlng = new google.maps.LatLng(
                 <g:if test="${isLogged}">${currentUser.lat}</g:if><g:else>54.9688974</g:else>,
                 <g:if test="${isLogged}">${currentUser.lng}</g:if><g:else>73.3846840</g:else>
             );
@@ -28,7 +28,7 @@
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
 
-            var map = new google.maps.Map(
+            map = new google.maps.Map(
                 document.getElementById("map_canvas"),
                 myOptions
             );

@@ -54,51 +54,49 @@ function showIncomingRequests() {
 
 function fillIncomingRequests(json) {
     var text = (json.incomeRequests.length != 0)
-        ? '' : '<div class=\"h2\"> Нет полученных запросов </div>';
+        ? '' : '<span class=\"h2\"> Нет полученных запросов </span>';
     for (var i = 0, len = json.incomeRequests.length; i < len; ++i) {
         var req = json.incomeRequests[i];
+        var replyForm = "";
+        var replyMessage = "";
 
         if (req.request.status == 0) {
-            status = createAcceptLink(req.request.id) + createDeclineLink(req.request.id);
+            replyForm = createReplyForm(req.request.id);
         } else if (req.request.status == 1) {
-            status = "Принят";
-        } else if (req.request.status == 2) {
-            status = "Отклонен";
+            replyMessage = req.request.replyMessage;
         }
-        text += "<div class=\"row\"> От пользователя: <span class=\"hh\">" + req.user.name + " " + req.user.surname + "</span>"
-            + "<br/> <span class=\"hh\">" + status + "</span></div>"
+
+        text += "<div class=\"row\"> От пользователя: <a onclick=\"showUserOnMap("
+            + req.user.id + ")\">" + req.user.name + " " + req.user.surname + "</a>"
+            + replyForm
+            + replyMessage
+            + "</div>"
     }
     $("#income").html(text);
 }
 
-function createAcceptLink(requestId) {
-    return '<a class="reqLink" onclick="acceptRequest(' + requestId + ')">'
-        + 'Принять'
-        + '</a>';
+function createReplyForm(requestId) {
+    return '<a class="showReplyForm" onclick="showReplyForm(' + requestId + ')">Написать ответ</a>'
+        + '<div class="hiddenReplyForm" id="hiddenReplyForm' + requestId + '">'
+        + '<textarea class="replyArea" id="replyArea' + requestId
+        + '"  maxlength="140"></textarea>'
+        + '<a class="btn" onclick="sendReply(' + requestId + ')">Отправить</a>'
+        + '</div>'
+}
+
+function showReplyForm(requestId) {
+    $(".hiddenReplyForm").hide();
+    $("#hiddenReplyForm" + requestId).show();
+}
+
+function sendReply(requestId) {
+
 }
 
 function createDeclineLink(requestId) {
     return '<a class="reqLink" onclick="declineRequest(' + requestId + ')">'
         + 'Отклонить'
         + '</a>';
-}
-
-function fillSentRequests(json) {
-    var text = (json.sentRequests.length != 0)
-        ? '' : '<div class=\"h2\"> Нет отправленных запросов </div>';
-    for (var i = 0, len = json.sentRequests.length; i < len; ++i) {
-        var req = json.sentRequests[i];
-        var status = "Не рассмотрен";
-        if (req.request.status == 1) {
-            status = "Принят";
-        } else if (req.request.status == 2) {
-            status = "Отклонен";
-        }
-        text += "<div class=\"row\"> Пользователю: <span class=\"hh\">" + req.user.name + " " + req.user.surname + "</span>"
-            + '<div>' + req.request.requestMessage + '</div>'
-            + "<br/> Статус: <span class=\"hh\">" + status + "</span></div>"
-    }
-    $("#outcome").html(text);
 }
 
 function acceptRequest(id, message) {
@@ -133,12 +131,44 @@ function declineRequest(id, message) {
     });
 }
 
+function fillSentRequests(json) {
+    var text = (json.sentRequests.length != 0)
+        ? '' : '<div class=\"h2\"> Нет отправленных запросов </div>';
+    for (var i = 0, len = json.sentRequests.length; i < len; ++i) {
+        var req = json.sentRequests[i];
+
+        text += "<div class=\"row\"> Пользователю:"
+            + " <a onclick=\"showUserOnMap(" + req.user.id + ")\">"
+            + req.user.name + " " + req.user.surname
+            + "</a>"
+            + '<div>' + req.request.requestMessage + '</div></div>'
+    }
+    $("#outcome").html(text);
+}
+
 function createRequestForm(recipientId) {
     return '<div id="req' + recipientId + '" class="req">'
-        + '<textarea maxlength="140" class="messageBox" id="messageTo' + recipientId + '"></textarea>'
+        + '<textarea class="messageBox" id="messageTo' + recipientId + '"></textarea>'
         + '<div class="sendRequestLink">'
         + '<a class="btn" onclick="sendRequest(' + recipientId + ')">'
         + 'Отправить запрос'
         + '</a>'
         + '</div></div>';
 }
+
+function showUserOnMap(userId) {
+    var bounds = new google.maps.LatLngBounds();
+    bounds.extend(latlng); // Current user's coordinates
+
+    for (var i = 0; i < markers.length; i++) {
+        if (ids[i] == userId) {
+            markers[i].setMap(map);
+            bounds.extend(markers[i].position);
+            infoWindows[i].open(map, markers[i]);
+        } else {
+            markers[i].setMap(null);
+        }
+    }
+    map.fitBounds(bounds);
+}
+
