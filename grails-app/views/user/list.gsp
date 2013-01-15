@@ -22,8 +22,10 @@
                 <g:if test="${isLogged}">${currentUser.lng}</g:if><g:else>73.3846840</g:else>
             );
 
+            mapZoom = 12;
+
             var myOptions = {
-                zoom: 12,
+                zoom: mapZoom,
                 center: latlng,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
@@ -165,29 +167,11 @@
             </g:if>
             <g:else>
                 <!-- If user is not logged in -->
-                var marker = null;
-                function placeMarker(location) {
-                    deleteEarlyPlacedMarker();
-                    marker = new google.maps.Marker({
-                        position: location,
-                        map: map
-                    });
-                }
-
-                function deleteEarlyPlacedMarker() {
-                    if (marker != null) {
-                        marker.setMap(null);
-                    }
-                }
-
-                function fillLatLngFields(location) {
-                    $("#latField").val(location.lat());
-                    $("#lngField").val(location.lng());
-                }
+                marker = null;
 
                 google.maps.event.addListener(map, 'click', function(event) {
                     placeMarker(event.latLng);
-                    fillLatLngFields(event.latLng);
+                    storeGeocodingResult(event.latLng);
                 });
             </g:else>
         }
@@ -197,7 +181,7 @@
 <body>
     <div id="menu">
         <div id="menu-content">
-            <img class="logo" src="images/car/logo-car.png"/>
+            <img class="logo" src="./images/car/logo-car.png"/>
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
@@ -216,7 +200,7 @@
                     <g:submitButton name="login" id="login-button" class="btn btn-warning" value="Войти" />
 
                 </g:form>
-                <g:form action="save" >
+                <g:form action="save">
                     <div class="intro stext">Впервые здесь? Приcоединяйтесь:</div>
                     <fieldset class="form">
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'email', 'error')}">
@@ -234,14 +218,25 @@
                         </div>
                         <div class="stext margin-top">Вы можете указать место жительства на карте, либо ввести адрес:</div>
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'address', 'error')} ">
-                            <g:textField name="address" required="required" placeholder="Домашний адрес"/>
+                            <form onsubmit="processAddress()">
+                                <div id="geoError"></div>
+                                <g:textField id="address" name="address" placeholder="Домашний адрес"/>
+                                <div class="align-right"><a class="btn geobtn" onclick="processAddress()">Найти на карте</a></div>
+                            </form>
+                        </div>
+
+                        <div class="margin-frm fieldcontain ${hasErrors(bean: userInstance, field: 'office', 'error')} required">
+                            <label class="stext" for="office">
+                                <g:message code="user.office.label" default="Расположение офиса" />
+                            </label>
+                            <g:select id="office" name="office.id" from="${car.companion.Office.list()}" optionKey="id" required="" value="${userInstance?.office?.id}" class="many-to-one"/>
                         </div>
 
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'hasCar', 'error')} ">
                             <label class="stext" for="hasCar">
                                 <g:message code="user.hasCar.label" default="У меня есть машина" />
                             </label>
-                            <g:checkBox style="width: 40px"name="hasCar" value="${userInstance?.hasCar}" />
+                            <g:checkBox style="width: 40px" name="hasCar" value="${userInstance?.hasCar}" />
                         </div>
                         <br/>
                         <div style="display: none" class="fieldcontain ${hasErrors(bean: userInstance, field: 'lat', 'error')} required">
@@ -251,18 +246,8 @@
                         <div style="display: none" class="fieldcontain ${hasErrors(bean: userInstance, field: 'lng', 'error')} required">
                             <g:field  type="hidden" name="lng" value="-1" required="" id="lngField"/>
                         </div>
-
-
-
-                        <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'office', 'error')} required">
-                            <label class="stext" for="office">
-                                <g:message code="user.office.label" default="Расположение офиса" />
-                            </label>
-                            <g:select id="office" name="office.id" from="${car.companion.Office.list()}" optionKey="id" required="" value="${userInstance?.office?.id}" class="many-to-one"/>
-                        </div>
+                        <g:submitButton name="create" class="btn btn-success" id="register-button" value="Регистрация"/>
                     </fieldset>
-
-                    <g:submitButton name="create" class="btn btn-success" id="register-button" value="Регистрация"/>
                     </g:form>
             </g:if>
             <g:else>

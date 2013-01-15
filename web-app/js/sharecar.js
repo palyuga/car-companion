@@ -89,6 +89,56 @@ function showReplyForm(requestId) {
     $("#hiddenReplyForm" + requestId).show();
 }
 
+function processAddress() {
+    var address = $("#address").val();
+    if (address != null && address.length != 0) {
+         geocode(address)
+    }
+    return false;
+}
+
+function geocode(address) {
+    var geocoder = new google.maps.Geocoder();
+    var result = "";
+    geocoder.geocode( { 'address': "Омск, " + address, 'region': 'RU' },
+        function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var location = results[0].geometry.location;
+                map.setCenter(location);
+                map.setZoom(mapZoom);
+                placeMarker(location);
+                storeGeocodingResult(location);
+            } else {
+                showGeocodingError("Такой адрес неизвестен. Попробуйте указать положение на карте.");
+            }
+        }
+    );
+}
+
+function storeGeocodingResult(location) {
+    $("#latField").val(location.lat());
+    $("#lngField").val(location.lng());
+
+}
+
+function placeMarker(location) {
+    deleteEarlyPlacedMarker();
+    marker = new google.maps.Marker({
+        position: location,
+        map: map
+    });
+}
+
+function deleteEarlyPlacedMarker() {
+    if (marker != null) {
+        marker.setMap(null);
+    }
+}
+function showGeocodingError(message) {
+    alert("OI!")
+    $("#geoError").html(message);
+}
+
 function sendReply(requestId) {
 
 }

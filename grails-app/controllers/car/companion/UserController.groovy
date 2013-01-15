@@ -8,26 +8,14 @@ class UserController {
 
     public static final String USER_SESSION_KEY = "user"
 
-    def geoLocatingService
-
     def encryptionService
 
-    def beforeInterceptor = [action: this.&setGeoLocation, only: ['save', 'update']]
+    def beforeInterceptor = [action: this.&encrypt, only: ['save', 'update']]
 
-    def setGeoLocation() {
-
-        if (isAddressEntered()) {
-            def coords = geoLocatingService.locate(params['address'])
-            params.putAll(coords)
-        } else {
-            params['lat'] = Double.valueOf(params['lat'] as String)
-            params['lng'] = Double.valueOf(params['lng'] as String)
-        }
+    def encrypt() {
+        params['lat'] = Double.valueOf(params['lat'] as String)
+        params['lng'] = Double.valueOf(params['lng'] as String)
         params.put("passwd", encryptionService.encrypt(params['passwd']))
-    }
-
-    private boolean isAddressEntered() {
-        (!"Домашний адрес".equals(params['address']))
     }
 
     def index() {
@@ -106,19 +94,30 @@ class UserController {
 
     def save() {
         def userInstance = new User(params)
-        if (userInstance.save(flush: true)) {
 
-            //If registration is successful user will be logged in
-            loginUser(userInstance)
-            redirect(action: "list")
+        if (isLocationValid()) {
+
+            if (userInstance.save(flush: true)) {
+
+                //If registration is successful user will be logged in
+                loginUser(userInstance)
+                redirect(action: "list")
+            } else {
+                flash.message = message(
+                        code: 'default.created.message',
+                        args: [message(code: 'user.label', default: 'User'),userInstance.id]
+                )
+                render(view: "list", model: [userInstance: userInstance])
+
+            }
         } else {
-            flash.message = message(
-                    code: 'default.created.message',
-                    args: [message(code: 'user.label', default: 'User'),userInstance.id]
-            )
-            render(view: "create", model: [userInstance: userInstance])
-
+            flash.message = "Похоже, Вы не указали свое положение на карте"
+            render(view: "list", model: [userInstance: userInstance])
         }
+    }
+
+    boolean isLocationValid() {
+        params['lat'] != -1 && params['lng'] != -1
     }
 
     private void loginUser(User userInstance) {

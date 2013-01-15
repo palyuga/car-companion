@@ -95,6 +95,16 @@ input:focus, select:focus, textarea:focus {
     box-shadow: 0 0 0.5em #ffffff;
 }
 
+.align-right {
+    text-align: right;
+}
+
+.geobtn {
+    height: 18px;
+    margin-right: 3px;
+    padding-top: 3px !important;
+}
+
 .required-indicator {
     color: #48802C;
     display: inline-block;
@@ -209,7 +219,8 @@ a:hover {
     font-weight: bold;
 }
 #office {
-    margin-left: 12px;
+    width: 97px;
+    margin-left: 7px;
 }
 
 .req {
@@ -238,6 +249,11 @@ a:hover {
 .companions-info {
     margin-top: 4px;
     margin-left: 23px;
+}
+
+.margin-frm {
+    margin-top: 20px;
+    margin-bottom: 4px;
 }
 
 #requests {
