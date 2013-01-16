@@ -72,25 +72,11 @@ class RequestController {
         }
     }
 
-    def acceptRequest() {
+    def replyRequest() {
         Request request = Request.findById(Long.parseLong(params['requestId'].toString()))
         def res = false
         if (request != null) {
             request.status = Request.ACCEPTED;
-            request.replyMessage = params['replyMessage'];
-            request.save(failOnError: true);
-            res = true
-        }
-        render(contentType:"text/json") {
-            [result: res]
-        }
-    }
-
-    def declineRequest() {
-        Request request = Request.findById(Long.parseLong(params['requestId'].toString()))
-        def res = false
-        if (request != null) {
-            request.status = Request.DECLINED;
             request.replyMessage = params['replyMessage'];
             request.save(failOnError: true);
             res = true

@@ -175,7 +175,7 @@ class UserController {
         redirect(action: "show", id: userInstance.id)
     }
 
-    def delete(Long id) {
+    def private delete(Long id) {
         def userInstance = User.get(id)
         if (!userInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), id])

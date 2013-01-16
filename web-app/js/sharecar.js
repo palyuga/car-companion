@@ -69,7 +69,7 @@ function fillIncomingRequests(json) {
         text += "<div class=\"row\"> От пользователя: <a onclick=\"showUserOnMap("
             + req.user.id + ")\">" + req.user.name + " " + req.user.surname + "</a>"
             + replyForm
-            + replyMessage
+            + '<div class="replyMessage">' + replyMessage + '</div>'
             + "</div>"
     }
     $("#income").html(text);
@@ -135,43 +135,15 @@ function deleteEarlyPlacedMarker() {
     }
 }
 function showGeocodingError(message) {
-    alert("OI!")
     $("#geoError").html(message);
 }
 
 function sendReply(requestId) {
-
-}
-
-function createDeclineLink(requestId) {
-    return '<a class="reqLink" onclick="declineRequest(' + requestId + ')">'
-        + 'Отклонить'
-        + '</a>';
-}
-
-function acceptRequest(id, message) {
     jQuery.ajax({
         type: 'POST',
-        data: {'requestId': id, 'replyMessage': message},
+        data: {'requestId': requestId, 'replyMessage': $("#replyArea" + requestId). val()},
         dataType: 'json',
-        url: '/car-companion/request/acceptRequest',
-        success:
-            showIncomingRequests(),
-        error:
-            function(XMLHttpRequest,textStatus,errorThrown){
-                fillIncomingRequests("Ошибка");
-            }
-    });
-
-
-}
-
-function declineRequest(id, message) {
-    jQuery.ajax({
-        type: 'POST',
-        data: {'requestId': id, 'replyMessage': message},
-        dataType: 'json',
-        url: '/car-companion/request/declineRequest',
+        url: '/car-companion/request/replyRequest',
         success:
             showIncomingRequests(),
         error:
@@ -186,12 +158,17 @@ function fillSentRequests(json) {
         ? '' : '<div class=\"h2\"> Нет отправленных запросов </div>';
     for (var i = 0, len = json.sentRequests.length; i < len; ++i) {
         var req = json.sentRequests[i];
-
+        var reply = "";
+        if (req.request.status == 1) {
+           reply = '<div class="replyMessageSent">' + req.request.replyMessage + '</div>';
+        }
         text += "<div class=\"row\"> Пользователю:"
             + " <a onclick=\"showUserOnMap(" + req.user.id + ")\">"
             + req.user.name + " " + req.user.surname
             + "</a>"
-            + '<div>' + req.request.requestMessage + '</div></div>'
+            + '<div>' + req.request.requestMessage + '</div>'
+            + reply
+            + '</div>'
     }
     $("#outcome").html(text);
 }

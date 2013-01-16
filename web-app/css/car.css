@@ -242,6 +242,10 @@ a:hover {
     font-size: 14px;
 }
 
+.info > div {
+    margin-bottom: 6px;
+}
+
 .intro {
     margin-top: 20px;
 }

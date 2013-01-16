@@ -80,7 +80,7 @@
                     content[${i}] = '<div class="info"><div> Меня зовут '
                             + '<span class="h">${user.name} ${user.surname}</span>'
                             + '</div> <div>'
-                            + 'Я живу на <span class="h">${user.address}</span>'
+                            + '<span class="h">${user.email}</span>'
                             + '</div> <div>'
                             + 'У меня <span class="h">' + (${user.hasCar} ? 'есть машина' : 'нет машины') + '</span></div>'
                             + ((${user.canYouSendHimRequest}) ? createRequestForm(${user.id}) : "Ваш запрос еще не рассмотрен")
@@ -204,17 +204,17 @@
                     <div class="intro stext">Впервые здесь? Приcоединяйтесь:</div>
                     <fieldset class="form">
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'email', 'error')}">
-                            <g:field type="email" class="default-value" name="email" required="required" placeholder="Адрес эл. почты"/>
+                            <g:field type="email" value="${userInstance?.email}" class="default-value" name="email" required="required" placeholder="Адрес эл. почты"/>
                         </div>
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'passwd', 'error')} ">
                             <g:passwordField name="passwd" placeholder="Пароль" required="required"/>
                         </div>
 
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'name', 'error')} ">
-                            <g:field type="text" name="name" required="required" placeholder="Имя"/>
+                            <g:field type="text" value="${userInstance?.name}" name="name" required="required" placeholder="Имя"/>
                         </div>
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'surname', 'error')} ">
-                            <g:textField name="surname" required="required" placeholder="Фамилия"/>
+                            <g:textField name="surname" value="${userInstance?.surname}" required="required" placeholder="Фамилия"/>
                         </div>
                         <div class="stext margin-top">Вы можете указать место жительства на карте, либо ввести адрес:</div>
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'address', 'error')} ">

@@ -22,4 +22,8 @@ class Request {
         requestMessage(blank: true, nullable: true)
         replyMessage(blank: true, nullable: true)
     }
+
+    static mapping = {
+        sort date: "desc"
+    }
 }
