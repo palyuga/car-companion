@@ -4,11 +4,10 @@ class Request {
 
     static final Integer NEW = 0;
     static final Integer ACCEPTED = 1;
-    static final Integer DECLINED = 2;
 
     User        src
     User        dest
-    Integer     status // 0 - NEW, 1 - ACCEPTED, 2 - DECLINED
+    Integer     status // 0 - NEW, 1 - ACCEPTED
     Date        date
     String requestMessage
     String replyMessage

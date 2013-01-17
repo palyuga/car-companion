@@ -79,7 +79,7 @@
 
                     content[${i}] = '<div class="info"><div> Меня зовут '
                             + '<span class="h">${user.name} ${user.surname}</span>'
-                            + '</div> <div>'
+                            + '</div> <div> Моя почта '
                             + '<span class="h">${user.email}</span>'
                             + '</div> <div>'
                             + 'У меня <span class="h">' + (${user.hasCar} ? 'есть машина' : 'нет машины') + '</span></div>'
@@ -252,7 +252,7 @@
             </g:if>
             <g:else>
                 <div id="hello"><span class="text">Добро пожаловать, ${currentUser.name}!</span>
-                    <span class="link-color">(</span><g:link id="logout-link" action="logoff">Выйти</g:link><span class="link-color">)</span>
+                    <span class="link-color">(</span><g:link action="logoff" class="logout-link">Выйти</g:link><span class="link-color">)</span>
                 </div>
 
                 <div id="slider-container">

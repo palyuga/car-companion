@@ -54,7 +54,7 @@ function showIncomingRequests() {
 
 function fillIncomingRequests(json) {
     var text = (json.incomeRequests.length != 0)
-        ? '' : '<span class=\"h2\"> Нет полученных запросов </span>';
+        ? '' : '<div class=\"h2\"> Нет полученных запросов </div>';
     for (var i = 0, len = json.incomeRequests.length; i < len; ++i) {
         var req = json.incomeRequests[i];
         var replyForm = "";
@@ -66,8 +66,10 @@ function fillIncomingRequests(json) {
             replyMessage = req.request.replyMessage;
         }
 
-        text += "<div class=\"row\"> От пользователя: <a onclick=\"showUserOnMap("
+        text += "<div class=\"row\"><a class=\"showUserLink\" onclick=\"showUserOnMap("
             + req.user.id + ")\">" + req.user.name + " " + req.user.surname + "</a>"
+            + "<div class=\"reqDate\">" + $.datepicker.formatDate('dd.mm.yy', new Date(req.request.date)) + "</div>"
+            + "<div class=\"reqMessage\">" + req.request.requestMessage + "</div>"
             + replyForm
             + '<div class="replyMessage">' + replyMessage + '</div>'
             + "</div>"
@@ -80,13 +82,18 @@ function createReplyForm(requestId) {
         + '<div class="hiddenReplyForm" id="hiddenReplyForm' + requestId + '">'
         + '<textarea class="replyArea" id="replyArea' + requestId
         + '"  maxlength="140"></textarea>'
-        + '<a class="btn" onclick="sendReply(' + requestId + ')">Отправить</a>'
+        + '<a class="btn replyBtn" onclick="sendReply(' + requestId + ')">Ответить</a>'
         + '</div>'
 }
 
 function showReplyForm(requestId) {
-    $(".hiddenReplyForm").hide();
-    $("#hiddenReplyForm" + requestId).show();
+    var replyFormId = "#hiddenReplyForm" + requestId;
+    $(".hiddenReplyForm:not(" + replyFormId + ")").hide();
+    if (!$(replyFormId).is(":visible")) {
+        $(replyFormId).show();
+    } else {
+        $(replyFormId).hide();
+    }
 }
 
 function processAddress() {
@@ -145,7 +152,9 @@ function sendReply(requestId) {
         dataType: 'json',
         url: '/car-companion/request/replyRequest',
         success:
-            showIncomingRequests(),
+            function() {
+                showIncomingRequests();
+            },
         error:
             function(XMLHttpRequest,textStatus,errorThrown){
                 fillIncomingRequests("Ошибка");
@@ -159,14 +168,17 @@ function fillSentRequests(json) {
     for (var i = 0, len = json.sentRequests.length; i < len; ++i) {
         var req = json.sentRequests[i];
         var reply = "";
-        if (req.request.status == 1) {
-           reply = '<div class="replyMessageSent">' + req.request.replyMessage + '</div>';
+        if (req.request.status == 0) {
+           reply = 'Этот запрос еще не рассмотрен';
+        } else if (req.request.status == 1) {
+           reply = '<div class="reqMessage">' + req.request.replyMessage + '</div>';
         }
-        text += "<div class=\"row\"> Пользователю:"
-            + " <a onclick=\"showUserOnMap(" + req.user.id + ")\">"
+        text += "<div class=\"row\">"
+            + "<a class=\"showUserLink\" onclick=\"showUserOnMap(" + req.user.id + ")\">"
             + req.user.name + " " + req.user.surname
             + "</a>"
-            + '<div>' + req.request.requestMessage + '</div>'
+            + "<div class=\"reqDate\">" + $.datepicker.formatDate('dd.mm.yy', new Date(req.request.date)) + "</div>"
+            + '<div class="replyMessage">' + req.request.requestMessage + '</div>'
             + reply
             + '</div>'
     }
@@ -175,7 +187,7 @@ function fillSentRequests(json) {
 
 function createRequestForm(recipientId) {
     return '<div id="req' + recipientId + '" class="req">'
-        + '<textarea class="messageBox" id="messageTo' + recipientId + '"></textarea>'
+        + '<textarea class="messageBox" id="messageTo' + recipientId + '" maxlength="140"></textarea>'
         + '<div class="sendRequestLink">'
         + '<a class="btn" onclick="sendRequest(' + recipientId + ')">'
         + 'Отправить запрос'
@@ -185,7 +197,7 @@ function createRequestForm(recipientId) {
 
 function showUserOnMap(userId) {
     var bounds = new google.maps.LatLngBounds();
-    bounds.extend(latlng); // Current user's coordinates
+    bounds.extend(latlng); // Current user coordinates
 
     for (var i = 0; i < markers.length; i++) {
         if (ids[i] == userId) {
