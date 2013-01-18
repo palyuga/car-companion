@@ -130,6 +130,10 @@
                 });
 
                 $(function() {
+                    var timeout = 5000;
+                    setInterval(function() {showIncomingRequests()}, timeout);
+                    setInterval(function() {showSentRequests()}, timeout);
+
                     $("#slider").slider({
                         value: 1,
                         min: 1,
