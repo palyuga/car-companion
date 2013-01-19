@@ -83,7 +83,7 @@
                             + '<span class="h">${user.email}</span>'
                             + '</div> <div>'
                             + 'У меня <span class="h">' + (${user.hasCar} ? 'есть машина' : 'нет машины') + '</span></div>'
-                            + ((${user.canYouSendHimRequest}) ? createRequestForm(${user.id}) : "Ваш запрос еще не рассмотрен")
+                            + createRequestForm(${user.id})
                             + '</div>';
 
                     ids[${i}] = ${user.id};
@@ -221,7 +221,7 @@
                             <form onsubmit="processAddress()">
                                 <div id="geoError"></div>
                                 <g:textField id="address" name="address" placeholder="Домашний адрес"/>
-                                <div class="align-right"><a class="btn geobtn" onclick="processAddress()">Найти на карте</a></div>
+                                <a class="btn geobtn" onclick="processAddress()">Найти</a>
                             </form>
                         </div>
 

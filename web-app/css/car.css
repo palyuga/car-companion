@@ -100,9 +100,9 @@ input:focus, select:focus, textarea:focus {
 }
 
 .geobtn {
-    height: 18px;
-    margin-right: 3px;
-    padding-top: 3px !important;
+    margin: 0 !important;
+    height: 17px;
+    padding-top: 1px !important;
 }
 
 .required-indicator {
@@ -203,6 +203,10 @@ a.logout-link:hover {
 
 #amount {
     color: #EFA023;
+}
+
+#address {
+    width: 168px;
 }
 
 .text {

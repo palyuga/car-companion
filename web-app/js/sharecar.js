@@ -17,7 +17,8 @@ function sendRequest(userId) {
 }
 
 function requestCallback(userId, message){
-    $("#req" + userId).html(message);
+    $("#messageTo" + userId).val("");
+    $("#reqNotify" + userId).html(message);
 }
 
 function showSentRequests() {
@@ -187,10 +188,11 @@ function fillSentRequests(json) {
 
 function createRequestForm(recipientId) {
     return '<div id="req' + recipientId + '" class="req">'
-        + '<textarea class="messageBox" id="messageTo' + recipientId + '" maxlength="140"></textarea>'
+        + '<div id="reqNotify' + recipientId + '" class="reqNotify"></div>'
+        + '<textarea placeholder="Текст сообщения" class="messageBox" id="messageTo' + recipientId + '" maxlength="140"></textarea>'
         + '<div class="sendRequestLink">'
         + '<a class="btn" onclick="sendRequest(' + recipientId + ')">'
-        + 'Отправить запрос'
+        + 'Отправить'
         + '</a>'
         + '</div></div>';
 }

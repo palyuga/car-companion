@@ -32,24 +32,24 @@ class UserController {
             resultList = User.findAllByOffice(user.office)
         }
 
-        Iterator<User> it = resultList.iterator()
-        while (it.hasNext()) {
-            User currentUser = it.next()
-            if (currentUser.email.equals(user.email)) {
-                it.remove()
-                continue
-            }
-            if (isNewRequestExists(user, currentUser)) {
-                currentUser.canYouSendHimRequest = false
-            }
-
-        }
+        excludeUserFromList(user, resultList)
 
         [
             userInstanceList: resultList,
             isLogged: (user != null),
             currentUser: [name: user?.name, lat: user?.lat, lng: user?.lng]
         ]
+    }
+
+    private void excludeUserFromList(User user, List resultList) {
+        Iterator<User> it = resultList.iterator()
+        while (it.hasNext()) {
+            User currentUser = it.next()
+            if (currentUser.email.equals(user.email)) {
+                it.remove()
+                break
+            }
+        }
     }
 
     private User getCurrentLoggedUser() {

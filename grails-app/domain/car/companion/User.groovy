@@ -22,6 +22,4 @@ class User {
         email(blank: false, unique: true, email: true)
     }
 
-    //This fields won't be stored in the database
-    static transients = ['canYouSendHimRequest']
 }
