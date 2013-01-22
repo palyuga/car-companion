@@ -45,12 +45,84 @@ function showIncomingRequests() {
         success:
             function(data){
                 fillIncomingRequests(data);
+                showNewIncomingRequests();
             },
         error:
             function(XMLHttpRequest,textStatus,errorThrown){
                 fillIncomingRequests("Ошибка");
             }
     });
+}
+
+function showNewIncomingRequests() {
+    jQuery.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: {'status' : 0},
+        url: '/car-companion/request/listIncome',
+        success:
+            function(data){
+                fillNewIncomingRequests(data);
+            },
+        error:
+            function(XMLHttpRequest,textStatus,errorThrown){
+                fillNewIncomingRequests("Ошибка");
+            }
+    });
+}
+
+function fillNewIncomingRequests(json) {
+    var text = "";
+    if (json.incomeRequests.length > 0) {
+
+        for (var i = 0, len = json.incomeRequests.length; i < len; ++i) {
+            var req = json.incomeRequests[i];
+            var replyForm = createReplyForm(req.request.id);
+            text += "<div class=\"row\"><a class=\"showUserLink\" onclick=\"showUserOnMap("
+                + req.user.id + ")\">" + req.user.name + " " + req.user.surname + "</a>"
+                + "<div class=\"reqDate\">" + $.datepicker.formatDate('dd.mm.yy', new Date(req.request.date)) + "</div>"
+                + "<div class=\"reqMessage\">" + req.request.requestMessage + "</div>"
+                + replyForm
+                + "</div>"
+
+        }
+    }
+    $("#newIncoming").html(text);
+}
+
+function checkNewIncomingRequests() {
+    jQuery.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: {'status' : 0},
+        url: '/car-companion/request/listIncome',
+        success:
+            function(data){
+                prependNewIncomingRequests(data);
+            },
+        error:
+            function(XMLHttpRequest,textStatus,errorThrown){
+                fillNewIncomingRequests("Ошибка");
+            }
+    });
+}
+
+function prependNewIncomingRequests(json) {
+    if (json.incomeRequests.length > 0) {
+        var text = "";
+        for (var i = 0, len = json.incomeRequests.length; i < len; ++i) {
+            var req = json.incomeRequests[i];
+            var replyForm = createReplyForm(req.request.id);
+            text += "<div class=\"row\"><a class=\"showUserLink\" onclick=\"showUserOnMap("
+                + req.user.id + ")\">" + req.user.name + " " + req.user.surname + "</a>"
+                + "<div class=\"reqDate\">" + $.datepicker.formatDate('dd.mm.yy', new Date(req.request.date)) + "</div>"
+                + "<div class=\"reqMessage\">" + req.request.requestMessage + "</div>"
+                + replyForm
+                + "</div>"
+
+        }
+        $("#newIncoming").prepend($(text).fadeIn('slow'));
+    }
 }
 
 function fillIncomingRequests(json) {
@@ -61,9 +133,9 @@ function fillIncomingRequests(json) {
         var replyForm = "";
         var replyMessage = "";
 
-        if (req.request.status == 0) {
+        if (req.request.status == 0 || req.request.status == 1) {
             replyForm = createReplyForm(req.request.id);
-        } else if (req.request.status == 1) {
+        } else if (req.request.status > 1) {
             replyMessage = req.request.replyMessage;
         }
 
@@ -169,9 +241,9 @@ function fillSentRequests(json) {
     for (var i = 0, len = json.sentRequests.length; i < len; ++i) {
         var req = json.sentRequests[i];
         var reply = "";
-        if (req.request.status == 0) {
+        if (req.request.status == 0 || req.request.status == 1) {
            reply = 'Этот запрос еще не рассмотрен';
-        } else if (req.request.status == 1) {
+        } else if (req.request.status > 1) {
            reply = '<div class="reqMessage">' + req.request.replyMessage + '</div>';
         }
         text += "<div class=\"row\">"

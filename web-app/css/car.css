@@ -456,7 +456,7 @@ a.logout-link:hover {
     clear:left;
 }
 
-.tabs #income, .tabs #outcome {
+#incomeTab, #outcomeTab {
     min-height: 50px;
     max-height: 300px;
     overflow-y: scroll;

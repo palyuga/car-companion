@@ -23,7 +23,6 @@ class RequestController {
         }
     }
 
-    // find all requests that comes to user from other users
     def listIncome(Integer status) {
         User user = (User)session.getAttribute("user")
         def resultList = []
@@ -32,6 +31,7 @@ class RequestController {
             if (params['status'] == null) {
                 requests = Request.findAllByDest(user);
             } else {
+
                 requests = Request.findAllByDestAndStatus(
                     user,
                     Integer.parseInt(params['status'].toString())
@@ -40,6 +40,7 @@ class RequestController {
 
             for (Request r : requests) {
                 r.src = User.findById(r.src.id)
+                markAsViewedIfNew(r)
                 resultList << [request: r, user: r.src]
             }
         }
@@ -48,7 +49,13 @@ class RequestController {
         }
     }
 
-    // final all requests that were sent by user
+    private void markAsViewedIfNew(Request r) {
+        if (r.status == Request.NEW) {
+            r.status = Request.VIEWED_BY_RECIPIENT;
+            r.save(failOnError: true);
+        }
+    }
+
     def listOutcome() {
         User user = (User)session.getAttribute("user")
         def resultList = []
@@ -76,33 +83,13 @@ class RequestController {
         Request request = Request.findById(Long.parseLong(params['requestId'].toString()))
         def res = false
         if (request != null) {
-            request.status = Request.ACCEPTED;
+            request.status = Request.ANSWERED;
             request.replyMessage = params['replyMessage'];
             request.save(failOnError: true);
             res = true
         }
         render(contentType:"text/json") {
             [result: res]
-        }
-    }
-
-    def isNewRequestExists() {
-        def result = false
-        if (params['recipientId'] != null) {
-            User sender = (User)session.getAttribute("user")
-            User recipient = User.findById(Long.parseLong(params['recipientId'].toString()))
-
-            if (sender != null && recipient != null) {
-                Request request = Request.findByStatusAndSrcAndDest(
-                        Request.NEW,
-                        sender,
-                        recipient
-                )
-                result = (request != null)
-            }
-        }
-        render(contentType:"text/json") {
-            [result: result]
         }
     }
 }

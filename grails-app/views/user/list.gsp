@@ -70,7 +70,7 @@
                     markers[${i}] =
                             new google.maps.Marker({
                                 icon: (${user.hasCar}) ? carImage : pedestrianImage,
-                                title: "${user.name}",
+                                title: "${user.name} ${user.surname}",
                                 map: map,
                                 draggable: false,
                                 animation: google.maps.Animation.DROP,
@@ -130,9 +130,9 @@
                 });
 
                 $(function() {
-                    var timeout = 5000;
-                    setInterval(function() {showIncomingRequests()}, timeout);
-                    setInterval(function() {showSentRequests()}, timeout);
+                    var timeout = 3000;
+                    setInterval(function() {checkNewIncomingRequests()}, timeout);
+                    setInterval(function() {showSentRequests()}, timeout * 3);
 
                     $("#slider").slider({
                         value: 1,
@@ -269,11 +269,16 @@
                 </div>
                 <div id="requests" class="tabs">
                     <ul>
-                        <li><a href="#income">Полученные</a></li>
-                        <li><a href="#outcome">Отправленные</a></li>
+                        <li><a href="#incomeTab">Полученные</a></li>
+                        <li><a href="#outcomeTab">Отправленные</a></li>
                     </ul>
-                    <div id="income"></div>
-                    <div id="outcome"></div>
+                    <div id="incomeTab">
+                        <div id="newIncoming"></div>
+                        <div id="income"></div>
+                    </div>
+                    <div id="outcomeTab">
+                        <div id="outcome"></div>
+                    </div>
                 </div>
             </g:else>
         </div>
