@@ -107,6 +107,12 @@ function checkNewIncomingRequests() {
     });
 }
 
+function clearNoIncomingMessage() {
+    if ($("#noIncomingReq") != null) {
+        $("#noIncomingReq").html("")
+    }
+}
+
 function prependNewIncomingRequests(json) {
     if (json.incomeRequests.length > 0) {
         var text = "";
@@ -121,13 +127,14 @@ function prependNewIncomingRequests(json) {
                 + "</div>"
 
         }
+        clearNoIncomingMessage();
         $("#newIncoming").prepend($(text).fadeIn('slow'));
     }
 }
 
 function fillIncomingRequests(json) {
     var text = (json.incomeRequests.length != 0)
-        ? '' : '<div class=\"h2\"> Нет полученных запросов </div>';
+        ? '' : '<div id="noIncomingReq" class=\"h2\"> Нет полученных запросов </div>';
     for (var i = 0, len = json.incomeRequests.length; i < len; ++i) {
         var req = json.incomeRequests[i];
         var replyForm = "";
