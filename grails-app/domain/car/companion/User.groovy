@@ -10,7 +10,10 @@ class User {
     String address
     Double lat
     Double lng
-    Boolean canYouSendHimRequest = true
+
+    static mapping = {
+        table "users"
+    }
 
     static belongsTo = [office: Office]
 

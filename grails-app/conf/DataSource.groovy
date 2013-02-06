@@ -13,8 +13,13 @@ hibernate {
 environments {
     development {
         dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
-            url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+            dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
+            //url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+            driverClassName = "org.apache.derby.jdbc.ClientDriver"
+            dbCreate = "update"
+            url = "jdbc:derby://172.30.207.79:1527/sharecar"
+            username = "rs"
+            password = "rs"
         }
     }
     test {
@@ -25,8 +30,11 @@ environments {
     }
     production {
         dataSource {
+            driverClassName = "org.apache.derby.jdbc.ClientDriver"
             dbCreate = "update"
-            url = "jdbc:h2:prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+            url = "jdbc:derby://172.30.207.79:1527/sharecar"
+            username = "rs"
+            password = "rs"
             pooled = true
             properties {
                maxActive = -1
@@ -36,7 +44,7 @@ environments {
                testOnBorrow=true
                testWhileIdle=true
                testOnReturn=true
-               validationQuery="SELECT 1"
+               validationQuery="select * from office fetch first row only"
             }
         }
     }

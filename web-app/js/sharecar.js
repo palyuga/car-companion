@@ -2,7 +2,7 @@ function sendRequest(userId) {
     jQuery.ajax({
         type: 'POST',
         data: {'destId': userId, 'requestMessage': $("#messageTo" + userId).val()},
-        url: '/car-companion/request/addRequest',
+        url: '/request/addRequest',
         success:
             function(data,textStatus){
                 requestCallback(userId, "Запрос отправлен");
@@ -24,7 +24,7 @@ function requestCallback(userId, message){
 function showSentRequests() {
     jQuery.ajax({
         type: 'POST',
-        url: '/car-companion/request/listOutcome',
+        url: '/request/listOutcome',
         dataType: "json",
         success:
             function(data){
@@ -41,7 +41,7 @@ function showIncomingRequests() {
     jQuery.ajax({
         type: 'POST',
         dataType: 'json',
-        url: '/car-companion/request/listIncome',
+        url: '/request/listIncome',
         success:
             function(data){
                 fillIncomingRequests(data);
@@ -59,7 +59,7 @@ function showNewIncomingRequests() {
         type: 'POST',
         dataType: 'json',
         data: {'status' : 0},
-        url: '/car-companion/request/listIncome',
+        url: '/request/listIncome',
         success:
             function(data){
                 fillNewIncomingRequests(data);
@@ -95,7 +95,7 @@ function checkNewIncomingRequests() {
         type: 'POST',
         dataType: 'json',
         data: {'status' : 0},
-        url: '/car-companion/request/listIncome',
+        url: '/request/listIncome',
         success:
             function(data){
                 prependNewIncomingRequests(data);
@@ -230,7 +230,7 @@ function sendReply(requestId) {
         type: 'POST',
         data: {'requestId': requestId, 'replyMessage': $("#replyArea" + requestId). val()},
         dataType: 'json',
-        url: '/car-companion/request/replyRequest',
+        url: '/request/replyRequest',
         success:
             function() {
                 showIncomingRequests();
@@ -267,12 +267,13 @@ function fillSentRequests(json) {
 
 function createRequestForm(recipientId) {
     return '<div id="req' + recipientId + '" class="req">'
-        + '<div id="reqNotify' + recipientId + '" class="reqNotify"></div>'
+
         + '<textarea placeholder="Текст сообщения" class="messageBox" id="messageTo' + recipientId + '" maxlength="140"></textarea>'
         + '<div class="sendRequestLink">'
-        + '<a class="btn" onclick="sendRequest(' + recipientId + ')">'
+        + '<div id="reqNotify' + recipientId + '" class="reqNotify"></div>'
+        + '<div><a class="btn" onclick="sendRequest(' + recipientId + ')">'
         + 'Отправить'
-        + '</a>'
+        + '</a></div>'
         + '</div></div>';
 }
 

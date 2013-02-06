@@ -12,7 +12,7 @@ class UserController {
 
     def beforeInterceptor = [action: this.&encrypt, only: ['save', 'update']]
 
-    def encrypt() {
+    def private encrypt() {
         params['lat'] = Double.valueOf(params['lat'] as String)
         params['lng'] = Double.valueOf(params['lng'] as String)
         params.put("passwd", encryptionService.encrypt(params['passwd']))
@@ -52,11 +52,11 @@ class UserController {
         }
     }
 
-    private User getCurrentLoggedUser() {
+    def private User getCurrentLoggedUser() {
         (User) session.getAttribute(USER_SESSION_KEY)
     }
 
-    def boolean isNewRequestExists(User sender, User recipient) {
+    def private boolean isNewRequestExists(User sender, User recipient) {
         Request request = Request.findByStatusAndSrcAndDest(
                 Request.NEW,
                 sender,
@@ -88,7 +88,7 @@ class UserController {
         redirect(action: "list");
     }
 
-    def create() {
+    def private create() {
         [userInstance: new User(params)]
     }
 
@@ -116,81 +116,20 @@ class UserController {
         }
     }
 
-    boolean isLocationValid() {
+    def private boolean isLocationValid() {
         params['lat'] != -1 && params['lng'] != -1
     }
 
-    private void loginUser(User userInstance) {
+    def private void loginUser(User userInstance) {
         session.setAttribute(USER_SESSION_KEY, userInstance)
     }
 
-    def show(Long id) {
-        def userInstance = User.get(id)
-        if (!userInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), id])
-            redirect(action: "list")
-            return
-        }
-
-        [userInstance: userInstance]
+    def alist(Integer max){
+        params.max = Math.min(max ?: 100, 1000)
+        [userInstanceList: User.list(params), userInstanceTotal: Office.count()]
     }
 
-    def edit(Long id) {
-        def userInstance = User.get(id)
-        if (!userInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), id])
-            redirect(action: "list")
-            return
-        }
+    def browser() {
 
-        [userInstance: userInstance]
-    }
-
-    def update(Long id, Long version) {
-        def userInstance = User.get(id)
-        if (!userInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), id])
-            redirect(action: "list")
-            return
-        }
-
-        if (version != null) {
-            if (userInstance.version > version) {
-                userInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'user.label', default: 'User')] as Object[],
-                          "Another user has updated this User while you were editing")
-                render(view: "edit", model: [userInstance: userInstance])
-                return
-            }
-        }
-
-        userInstance.properties = params
-
-        if (!userInstance.save(flush: true)) {
-            render(view: "edit", model: [userInstance: userInstance])
-            return
-        }
-
-        flash.message = message(code: 'default.updated.message', args: [message(code: 'user.label', default: 'User'), userInstance.id])
-        redirect(action: "show", id: userInstance.id)
-    }
-
-    def private delete(Long id) {
-        def userInstance = User.get(id)
-        if (!userInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), id])
-            redirect(action: "list")
-            return
-        }
-
-        try {
-            userInstance.delete(flush: true)
-            flash.message = message(code: 'default.deleted.message', args: [message(code: 'user.label', default: 'User'), id])
-            redirect(action: "list")
-        }
-        catch (DataIntegrityViolationException e) {
-            flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'user.label', default: 'User'), id])
-            redirect(action: "show", id: id)
-        }
     }
 }

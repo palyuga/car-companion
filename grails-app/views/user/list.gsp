@@ -6,7 +6,7 @@
     <meta name="layout" content="main">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <g:set var="entityName" value="${message(code: 'user.label', default: 'User')}" />
-    <title><g:message code="default.list.label" args="[entityName]" /></title>
+    <title>ShareCar</title>
     <script type="text/javascript"
             src="https://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry">
     </script>
@@ -17,6 +17,14 @@
 
     <script type="text/javascript">
         function initialize() {
+
+            if ($.browser.msie) {
+                if ($.browser.version < 10) {
+                    window.location.replace("user/browser");
+                }
+            }
+
+
             latlng = new google.maps.LatLng(
                 <g:if test="${isLogged}">${currentUser.lat}</g:if><g:else>54.9688974</g:else>,
                 <g:if test="${isLogged}">${currentUser.lng}</g:if><g:else>73.3846840</g:else>
@@ -77,12 +85,12 @@
                                 position: new google.maps.LatLng(${user.lat}, ${user.lng})
                             });
 
-                    content[${i}] = '<div class="info"><div> Меня зовут '
+                    content[${i}] = '<div class="info"><div>'
                             + '<span class="h">${user.name} ${user.surname}</span>'
-                            + '</div> <div> Моя почта '
-                            + '<span class="h">${user.email}</span>'
+                            + '</div> <div> Email: '
+                            + '<span class="h3">${user.email}</span>'
                             + '</div> <div>'
-                            + 'У меня <span class="h">' + (${user.hasCar} ? 'есть машина' : 'нет машины') + '</span></div>'
+                            + '<span class="h">' + (${user.hasCar} ? 'Есть машина' : 'Нет машины') + '</span></div>'
                             + createRequestForm(${user.id})
                             + '</div>';
 
@@ -132,7 +140,7 @@
                 $(function() {
                     var timeout = 3000;
                     setInterval(function() {checkNewIncomingRequests()}, timeout);
-                    setInterval(function() {showSentRequests()}, timeout * 3);
+                    setInterval(function() {showSentRequests()}, timeout * 2);
 
                     $("#slider").slider({
                         value: 1,
@@ -185,7 +193,7 @@
 <body>
     <div id="menu">
         <div id="menu-content">
-            <img class="logo" src="./images/car/logo-car.png"/>
+            <img width="255" height="66" class="logo" src="./images/car/logo-car.png"/>
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
@@ -220,7 +228,7 @@
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'surname', 'error')} ">
                             <g:textField name="surname" value="${userInstance?.surname}" required="required" placeholder="Фамилия"/>
                         </div>
-                        <div class="stext margin-top">Вы можете указать место жительства на карте, либо ввести адрес:</div>
+                        <div class="stext margin-top">Вы можете указать место жительства на карте, либо воспользоваться поиском по карте:</div>
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'address', 'error')} ">
                             <form onsubmit="processAddress()">
                                 <div id="geoError"></div>
