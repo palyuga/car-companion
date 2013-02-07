@@ -517,3 +517,42 @@ a.showUserLink:hover {
 .sendRequestLink div {
   display: inline;
 }
+
+#overlay{
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    position: fixed;
+    top:200px;
+    left:25%;
+    background:#eee;
+    color:#4d4d4d;
+    border:0px solid #e4e4e4;
+    padding:25px;
+    z-index:101;
+}
+
+#descr td {
+    text-align: center;
+    width: 190px;
+}
+
+#descr .descr-text td {
+    height: 100px;
+}
+
+.promo {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 18px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+#close-overlay {
+    position: absolute;
+    top: 15px;
+    right: 16px;
+}
+
+#close-overlay:hover {
+    cursor: pointer;
+}

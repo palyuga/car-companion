@@ -61,6 +61,10 @@ class RequestController {
         def resultList = []
         if (user != null) {
             def requests
+            def answeredRequests = Request.findAllBySrcAndStatus(user, Request.ANSWERED)
+
+            markAsViewed(answeredRequests)
+
             if (params['status'] == null) {
                 requests = Request.findAllBySrc(user);
             } else {
@@ -76,6 +80,21 @@ class RequestController {
         }
         render(contentType:"text/json") {
             [sentRequests: resultList]
+        }
+    }
+
+    def private markAsViewed(List<Request> answeredRequests) {
+        for (Request answeredRequest : answeredRequests) {
+            answeredRequest.setStatus(Request.ANSWERED_AND_VIEWED_BY_SENDER)
+            answeredRequest.save()
+        }
+    }
+
+    def isThereNewAnsweredRequests() {
+        User user = (User)session.getAttribute("user")
+        def boolean result = Request.findBySrcAndStatus(user, Request.ANSWERED) != null
+        render(contentType: "text/json") {
+            [result: result]
         }
     }
 

@@ -2,10 +2,10 @@ function sendRequest(userId) {
     jQuery.ajax({
         type: 'POST',
         data: {'destId': userId, 'requestMessage': $("#messageTo" + userId).val()},
-        url: '/request/addRequest',
+        url: 'request/addRequest',
         success:
             function(data,textStatus){
-                requestCallback(userId, "Запрос отправлен");
+                requestCallback(userId, "Отправлен");
                 showSentRequests();
             },
         error:
@@ -21,10 +21,24 @@ function requestCallback(userId, message){
     $("#reqNotify" + userId).html(message);
 }
 
+function showSentRequestsIfNewAnswers() {
+    jQuery.ajax({
+        type: 'POST',
+        url: 'request/isThereNewAnsweredRequests',
+        dataType: "json",
+        success:
+            function(data){
+                if (data.result) {
+                    showSentRequests()
+                }
+            }
+    });
+}
+
 function showSentRequests() {
     jQuery.ajax({
         type: 'POST',
-        url: '/request/listOutcome',
+        url: 'request/listOutcome',
         dataType: "json",
         success:
             function(data){
@@ -41,7 +55,7 @@ function showIncomingRequests() {
     jQuery.ajax({
         type: 'POST',
         dataType: 'json',
-        url: '/request/listIncome',
+        url: 'request/listIncome',
         success:
             function(data){
                 fillIncomingRequests(data);
@@ -59,7 +73,7 @@ function showNewIncomingRequests() {
         type: 'POST',
         dataType: 'json',
         data: {'status' : 0},
-        url: '/request/listIncome',
+        url: 'request/listIncome',
         success:
             function(data){
                 fillNewIncomingRequests(data);
@@ -95,7 +109,7 @@ function checkNewIncomingRequests() {
         type: 'POST',
         dataType: 'json',
         data: {'status' : 0},
-        url: '/request/listIncome',
+        url: 'request/listIncome',
         success:
             function(data){
                 prependNewIncomingRequests(data);
@@ -230,7 +244,7 @@ function sendReply(requestId) {
         type: 'POST',
         data: {'requestId': requestId, 'replyMessage': $("#replyArea" + requestId). val()},
         dataType: 'json',
-        url: '/request/replyRequest',
+        url: 'request/replyRequest',
         success:
             function() {
                 showIncomingRequests();
@@ -293,3 +307,6 @@ function showUserOnMap(userId) {
     map.fitBounds(bounds);
 }
 
+function closeOverlay() {
+    $("#overlay").hide();
+}

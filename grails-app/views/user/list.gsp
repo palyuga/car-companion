@@ -140,7 +140,7 @@
                 $(function() {
                     var timeout = 3000;
                     setInterval(function() {checkNewIncomingRequests()}, timeout);
-                    setInterval(function() {showSentRequests()}, timeout * 2);
+                    setInterval(function() {showSentRequestsIfNewAnswers()}, timeout * 2 + 133);
 
                     $("#slider").slider({
                         value: 1,
@@ -228,7 +228,7 @@
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'surname', 'error')} ">
                             <g:textField name="surname" value="${userInstance?.surname}" required="required" placeholder="Фамилия"/>
                         </div>
-                        <div class="stext margin-top">Вы можете указать место жительства на карте, либо воспользоваться поиском по карте:</div>
+                        <div class="stext margin-top">Вы можете указать место жительства на карте, либо воспользоваться поиском по ней: </div>
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'address', 'error')} ">
                             <form onsubmit="processAddress()">
                                 <div id="geoError"></div>
@@ -261,6 +261,36 @@
                         <g:submitButton name="create" class="btn btn-success" id="register-button" value="Регистрация"/>
                     </fieldset>
                     </g:form>
+                <div id="overlay">
+                    <table id="descr">
+                        <div class="promo">
+                            ShareCar — это система поиска попутчиков для поездок домой и на работу
+                            <a onclick="closeOverlay()" id="close-overlay"><img src="./images/close-window.png"/></a>
+                        </div>
+                        <tr>
+                            <td>
+                                <img width="160" src="./images/1.png"/>
+                            </td>
+                            <td>
+                                <img width="160" src="./images/2.png"/>
+                            </td>
+                            <td>
+                                <img width="160" src="./images/3.png"/>
+                            </td>
+                            <td>
+                                <img width="160" src="./images/4.png"/>
+                            </td>
+                        </tr>
+                        <tr class="descr-text">
+                            <td><b>1.</b><br/>Введите свои данные</td>
+                            <td>
+                                <b>2.</b><br/>Укажите место жительства, либо любое другое место, откуда Вы чаще всего ездите на работу
+                            </td>
+                            <td><b>3.</b><br/>Ищите работников из своего офиса, живущих неподалеку</td>
+                            <td><b>4.</b><br/>Отправляйте запросы, отвечайте на запросы, катайтесь на работу вместе!</td>
+                        </tr>
+                    </table>
+                </div>
             </g:if>
             <g:else>
                 <div id="hello"><span class="text">Добро пожаловать, ${currentUser.name}!</span>
