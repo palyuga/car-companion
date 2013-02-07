@@ -520,6 +520,7 @@ a.showUserLink:hover {
 }
 
 #overlay{
+    display: none;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
     position: fixed;
     top:200px;
@@ -556,4 +557,14 @@ a.showUserLink:hover {
 
 #close-overlay:hover {
     cursor: pointer;
+}
+
+#what {
+    color: rgb(94, 99, 216);
+    text-decoration: underline;
+}
+
+#what:hover {
+    cursor: pointer;
+    color: rgb(85, 91, 206);
 }

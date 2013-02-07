@@ -214,6 +214,7 @@
                 </g:form>
                 <g:form action="save">
                     <div class="intro stext">Впервые здесь? Приcоединяйтесь:</div>
+                    <a id="what" onclick="$('#overlay').fadeIn('fast')">Что это такое?</a>
                     <fieldset class="form">
                         <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'email', 'error')}">
                             <g:field type="email" value="${userInstance?.email}" class="default-value" name="email" required="required" placeholder="Адрес эл. почты"/>
