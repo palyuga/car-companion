@@ -122,6 +122,7 @@ input:focus, select:focus, textarea:focus {
 .fieldcontain input {
     color: #777777;
     width: 240px;
+    height: 16px;
     margin-top: 10px;
 }
 
