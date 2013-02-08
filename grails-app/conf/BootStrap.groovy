@@ -14,8 +14,8 @@ class BootStrap {
 
     def init = {
         servletContext ->
-        Office o1 = new Office(name: "Маркса", lat: new Double(72), lng: new Double(55)).save();
-        Office o2 = new Office(name: "Учебная", lat: new Double(80), lng: new Double(55)).save();
+//        Office o1 = new Office(name: "Маркса", lat: new Double(72), lng: new Double(55)).save();
+//        Office o2 = new Office(name: "Учебная", lat: new Double(80), lng: new Double(55)).save();
         /*
         User pet = new User(name:  "Пётр Иванович", surname: "Троцкий", email: "petr@luxoft.com", address: "пр. Маркса, 34", office: o1, lat: 54.9460357, lng: 73.3374034, hasCar: false, passwd: enc("123")).save(failOnError: true)
         User iva = new User(name:  "Ваня", surname: "Керенский", email: "ivan@luxoft.com", address: "ул. Фугенфирова, 20", office: o1, lat: 54.9762631, lng: 73.3321115, hasCar: true, passwd: enc("123")).save(failOnError: true)

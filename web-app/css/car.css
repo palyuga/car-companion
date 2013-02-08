@@ -560,11 +560,12 @@ a.showUserLink:hover {
 }
 
 #what {
-    color: rgb(94, 99, 216);
+    font-size: 12px;
+    color: #FAA732;
     text-decoration: underline;
 }
 
 #what:hover {
     cursor: pointer;
-    color: rgb(85, 91, 206);
+    color: #fa9952;
 }
