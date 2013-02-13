@@ -1,25 +1,32 @@
 package car.companion
 
+import org.codehaus.groovy.runtime.DefaultGroovyMethods
+
 class RequestController {
 
     def index() { }
 
     def addRequest() {
-        User user = (User)session.getAttribute("user")
-        if (user != null) {
-            User destUser = User.findById(Long.parseLong(params['destId'].toString()));
-            if (destUser != null) {
-                new Request(
-                    src: user,
-                    dest: destUser,
-                    status: Request.NEW,
-                    date: new Date(),
-                    requestMessage: params['requestMessage']
-                ).save(failOnError: true)
+        def result = false
+        if (params['requestMessage'] != null && params['destId'] != null) {
+            User user = (User)session.getAttribute("user")
+            if (user != null) {
+                User destUser = User.findById(Long.parseLong(params['destId'].toString()));
+                if (destUser != null) {
+                    new Request(
+                        src: user,
+                        dest: destUser,
+                        status: Request.NEW,
+                        date: new Date(),
+                        requestMessage: (GString.EMPTY + (params['requestMessage'])).encodeAsHTML()
+                    ).save(failOnError: true)
+                    result = true;
+                }
             }
+
         }
         render(contentType:"text/json") {
-            [result : true]
+            [result : result]
         }
     }
 
@@ -99,13 +106,16 @@ class RequestController {
     }
 
     def replyRequest() {
-        Request request = Request.findById(Long.parseLong(params['requestId'].toString()))
         def res = false
-        if (request != null) {
-            request.status = Request.ANSWERED;
-            request.replyMessage = params['replyMessage'];
-            request.save(failOnError: true);
-            res = true
+        if (params['requestId'] != null && params['replyMessage'] != null) {
+            Request request = Request.findById(Long.parseLong(params['requestId'].toString()))
+
+            if (request != null) {
+                request.status = Request.ANSWERED;
+                request.replyMessage = (GString.EMPTY + params['replyMessage']).encodeAsHTML();
+                request.save(failOnError: true);
+                res = true
+            }
         }
         render(contentType:"text/json") {
             [result: res]

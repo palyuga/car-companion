@@ -1,18 +1,27 @@
 function sendRequest(userId) {
-    jQuery.ajax({
-        type: 'POST',
-        data: {'destId': userId, 'requestMessage': $("#messageTo" + userId).val()},
-        url: 'request/addRequest',
-        success:
-            function(data,textStatus){
-                requestCallback(userId, "Отправлен");
-                showSentRequests();
-            },
-        error:
-            function(XMLHttpRequest,textStatus,errorThrown){
-                requestCallback(userId, "Ошибка");
-            }
-    });
+    if (
+        $("#messageTo" + userId).val() != null
+        && $("#messageTo" + userId).val().trim() != ""
+    ) {
+        jQuery.ajax({
+            type: 'POST',
+            data: {'destId': userId, 'requestMessage': $("#messageTo" + userId).val()},
+            url: 'request/addRequest',
+            success:
+                function(data, textStatus){
+                    if (data.result) {
+                        requestCallback(userId, "Отправлен");
+                        showSentRequests();
+                    } else {
+                        requestCallback(userId, "Не отправлен");
+                    }
+                },
+            error:
+                function(XMLHttpRequest,textStatus,errorThrown){
+                    requestCallback(userId, "Ошибка");
+                }
+        });
+    }
     return false;
 }
 
@@ -246,8 +255,10 @@ function sendReply(requestId) {
         dataType: 'json',
         url: 'request/replyRequest',
         success:
-            function() {
-                showIncomingRequests();
+            function(data) {
+                if (data.result) {
+                    showIncomingRequests();
+                }
             },
         error:
             function(XMLHttpRequest,textStatus,errorThrown){

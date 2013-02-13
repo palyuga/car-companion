@@ -13,6 +13,9 @@
 }
 
 #menu {
+    overflow: auto;
+    top: 0px;
+    bottom: 0px;
     width: 300px;
     float: left;
     background-image: url(../images/car/menu-bg.png);
@@ -20,6 +23,9 @@
 }
 
 #menu-content {
+    overflow: auto;
+    top: 0px;
+    bottom: 0px;
     margin-left: 20px;
     width:255px;
 }
